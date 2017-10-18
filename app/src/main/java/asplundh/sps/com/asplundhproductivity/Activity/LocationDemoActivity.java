@@ -3,6 +3,7 @@ package asplundh.sps.com.asplundhproductivity.Activity;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,6 +25,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -37,6 +44,8 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.annotations.Marker;
+import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.annotations.PolylineOptions;
 import com.mapbox.mapboxsdk.camera.CameraUpdate;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
@@ -47,11 +56,20 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
+import asplundh.sps.com.asplundhproductivity.Model.Point;
 import asplundh.sps.com.asplundhproductivity.R;
+import asplundh.sps.com.asplundhproductivity.Singleton.MySingleton;
 import asplundh.sps.com.asplundhproductivity.Utils.AppConstants;
+
+import static asplundh.sps.com.asplundhproductivity.Utils.AppConstants.BASE_URL;
 
 public class LocationDemoActivity extends AppCompatActivity implements  GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
@@ -78,6 +96,12 @@ public class LocationDemoActivity extends AppCompatActivity implements  GoogleAp
     private MapView mapView;
     private MapboxMap map;
     public static double Lat = 0.0 , Lng = 0.0;
+    String circuitID = "";
+    ArrayList<Point> pointsArrayList = new ArrayList<Point>();
+    PolylineOptions options;
+    boolean markerAdded = false;
+    JSONArray SubunitsArray;
+    String bidPlanID = "";
     
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -88,6 +112,12 @@ public class LocationDemoActivity extends AppCompatActivity implements  GoogleAp
     
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                              WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        options = new PolylineOptions().width(7).color(Color.BLACK);
+        
+        circuitID = getIntent().getStringExtra("CIRCUITID");
+        bidPlanID = getIntent().getStringExtra("BIDPLANID");
+        
+        getCircuitPath();
         
         RelativeLayout loc_cuurent_ic = (RelativeLayout) findViewById(R.id.loc_cuurent_ic);
         loc_cuurent_ic.setOnClickListener(this);
@@ -179,7 +209,15 @@ public class LocationDemoActivity extends AppCompatActivity implements  GoogleAp
                 break;
             
             case R.id.btn_start:
+                
+                String startTime = AppConstants.getISOCurrentTime();
+                
                 Intent intentt = new Intent(LocationDemoActivity.this, CircuitEstimationActivity.class);
+                intentt.putExtra("POINTSARRAY" , pointsArrayList);
+                intentt.putExtra("SUBUNITSARRAY" , SubunitsArray.toString());
+                intentt.putExtra("CIRCUITID" , circuitID);
+                intentt.putExtra("BIDPLANID" , bidPlanID);
+                intentt.putExtra("STARTTIME" , startTime);
                 startActivity(intentt);
                 
                 break;
@@ -379,6 +417,8 @@ public class LocationDemoActivity extends AppCompatActivity implements  GoogleAp
     
     }
     
+    Marker mMarker = null;
+    
     @Override
     public void onLocationChanged(Location location)
     {
@@ -388,12 +428,23 @@ public class LocationDemoActivity extends AppCompatActivity implements  GoogleAp
     
         Lat = location.getLatitude();
         Lng = location.getLongitude();
+        LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
     
-        map.clear();
-        map.addMarker(new com.mapbox.mapboxsdk.annotations.MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())).title(""));
+        //map.clear();
+        MarkerOptions markerOptions = new MarkerOptions().position(point).title("");
+    
+        if(!markerAdded)
+        {
+            mMarker = map.addMarker(markerOptions);
+            markerAdded = true;
+        }
+        else
+            mMarker.setPosition(point);
         
-        Toast.makeText(LocationDemoActivity.this , "LATT: " + location.getLatitude(),
-                       Toast.LENGTH_SHORT).show();
+      //  map.addMarker(new com.mapbox.mapboxsdk.annotations.MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())).title(""));
+        
+        /*Toast.makeText(LocationDemoActivity.this , "LATT: " + location.getLatitude(),
+                       Toast.LENGTH_SHORT).show();*/
     }
     
     public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -532,5 +583,109 @@ public class LocationDemoActivity extends AppCompatActivity implements  GoogleAp
         
         map.animateCamera(zoom , 4000);
         map.moveCamera(center);
+    }
+    
+    private void getCircuitPath()
+    {
+        final ProgressDialog dialog = ProgressDialog.show(this, "Processing",
+                                                          getResources().getString(R.string.getting_data), true);
+        
+        Log.i(AppConstants.TAG , "getBidPlans URL: " + BASE_URL + "getCircuitPath?Id=2");
+        
+        RequestQueue mRequestQueue;
+        mRequestQueue = MySingleton.getInstance(this).getRequestQueue();
+        StringRequest postRequest = new StringRequest(Request.Method.GET,
+                                                      AppConstants.BASE_URL + "getCircuitPath?Id=2"
+                                                      
+                                                      //+ circuitID
+                
+                ,
+                                                      new Response.Listener<String>() {
+                                                          @Override
+                                                          public void onResponse(String response) {
+                        
+                                                              Log.d(AppConstants.TAG , "getCircuitPath ressponse: " + response);
+                                                              // bidPlansJson = response;
+                    
+                                                              try
+                                                              {
+                                                                  JSONObject jsonObj = new JSONObject(response);
+                        
+                                                                  boolean success = jsonObj.getBoolean("success");
+                                                                  String message = jsonObj.getString("message");
+                        
+                                                                  if(!success)
+                                                                  {
+                                                                      Toast.makeText(LocationDemoActivity.this , message,
+                                                                                     Toast.LENGTH_LONG).show();
+                                                                  }
+                                                                  else
+                                                                  {
+                                                                      JSONObject result = jsonObj.getJSONObject("result");
+                                                                      JSONArray pointsArray = result.getJSONArray("CircuitPath");
+                                                                      
+                                                                      for(int i=0; i<pointsArray.length(); i++)
+                                                                      {
+                                                                          JSONObject obj = pointsArray.getJSONObject(i);
+                                                                          String LAT = obj.opt("x").toString();
+                                                                          String LNG = obj.opt("y").toString();
+    
+                                                                          Point point = new Point(LAT ,LNG);
+                                                                          pointsArrayList.add(point);
+                                                                                  
+                                                                      }
+    
+                                                                       SubunitsArray = result.getJSONArray("Subunits");
+                                                                      
+                                                                      drawCircuit();
+                                                                      
+                                                                  }
+                                                              }
+                                                              catch (JSONException e)
+                                                              {
+                                                                  Log.e(AppConstants.TAG , "JSONException: " + e.toString());
+                                                              }
+                        
+                                                              dialog.dismiss();
+                                                          }
+                                                      }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error)
+            {
+                Log.e(AppConstants.TAG , "onErrorResponse: " + error.toString());
+                dialog.dismiss();
+                
+            }
+            
+        }) {
+            
+        };
+        postRequest.setRetryPolicy(new DefaultRetryPolicy(
+                80000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        
+        mRequestQueue.add(postRequest);
+    }
+    
+    public void drawCircuit()
+    {
+        for(int i=0; i< pointsArrayList.size(); i++)
+        {
+            LatLng latlng = new LatLng(Double.parseDouble(pointsArrayList.get(i).getLAT()) , Double.parseDouble(pointsArrayList.get(i).getLNG()));
+            options.add(latlng);
+        }
+    
+        if(pointsArrayList.size() != 0)
+        {
+            CameraUpdate center=
+                    CameraUpdateFactory.newLatLng(new LatLng(Double.parseDouble(pointsArrayList.get(0).getLAT()) , Double.parseDouble(pointsArrayList.get(0).getLNG())));
+            CameraUpdate zoom= CameraUpdateFactory.zoomTo(13);
+            map.moveCamera(center);
+            map.animateCamera(zoom);
+    
+            map.addPolyline(options);
+        }
+        
     }
 }

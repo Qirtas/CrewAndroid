@@ -6,12 +6,23 @@ package asplundh.sps.com.asplundhproductivity.Model;
 
 public class SubUnit
 {
-    String id , title;
+    String id , title  , bidPlanID;
     
-    public SubUnit(String id, String title)
+    public SubUnit(String id, String title , String bidPlanID)
     {
         this.id = id;
         this.title = title;
+        this.bidPlanID = bidPlanID;
+    }
+    
+    public String getBidPlanID()
+    {
+        return bidPlanID;
+    }
+    
+    public void setBidPlanID(String bidPlanID)
+    {
+        this.bidPlanID = bidPlanID;
     }
     
     public String getId()

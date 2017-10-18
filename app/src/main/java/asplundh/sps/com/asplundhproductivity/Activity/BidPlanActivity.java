@@ -185,7 +185,7 @@ public class BidPlanActivity extends AppCompatActivity implements View.OnClickLi
                                                                               String Id_subunit = subunit.opt("Id").toString();
                                                                               String Title_subunit = subunit.opt("Title").toString();
     
-                                                                              SubUnit subUnit = new SubUnit(Id_subunit , Title_subunit);
+                                                                              SubUnit subUnit = new SubUnit(Id_subunit , Title_subunit , id);
                                                                               subunits_list.add(subUnit);
     
                                                                               Log.v(AppConstants.TAG , "subunit: " + subunit);
@@ -218,7 +218,7 @@ public class BidPlanActivity extends AppCompatActivity implements View.OnClickLi
                                                                                   String Id_subunit = subunit.opt("Id").toString();
                                                                                   String Title_subunit = subunit.opt("Title").toString();
         
-                                                                                  SubUnit subUnit = new SubUnit(Id_subunit , Title_subunit);
+                                                                                  SubUnit subUnit = new SubUnit(Id_subunit , Title_subunit , id_version);
                                                                                   subunits_list_version.add(subUnit);
         
                                                                                   Log.w(AppConstants.TAG , "subunit: " + subunit);

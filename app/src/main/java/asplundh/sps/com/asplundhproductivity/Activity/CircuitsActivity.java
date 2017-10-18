@@ -78,6 +78,7 @@ public class CircuitsActivity extends AppCompatActivity implements View.OnClickL
         recyclerView.setAdapter(mAdapter);
         
          bidPlanID = getIntent().getStringExtra("BIDPLANID");
+        
     
         JSONObject postParams = getPostParams();
         Log.v(AppConstants.TAG , "POST PARAMS: " + postParams);
@@ -126,7 +127,7 @@ public class CircuitsActivity extends AppCompatActivity implements View.OnClickL
         {
             
             credentialsObj.put("userId" , mPrefs.getString(AppConstants.USER_ID , ""));
-            credentialsObj.put("bidPlanId" , bidPlanID);
+            credentialsObj.put("bidPlanId" , mPrefs.getString(AppConstants.BID_PLAN_ID , ""));
             
         }
         catch (JSONException e)
@@ -181,7 +182,7 @@ public class CircuitsActivity extends AppCompatActivity implements View.OnClickL
                                                                           String circuitLinePath =  object.opt("LinePath").toString();
     
     
-                                                                          Circuit circuit = new Circuit(circuitID ,circuitTitle , circuitMilage , circuitLineType , circuitIsDelegated , circuitLinePath);
+                                                                          Circuit circuit = new Circuit(circuitID ,circuitTitle , circuitMilage , circuitLineType , circuitIsDelegated , circuitLinePath , bidPlanID);
                                                                           circuitsList.add(circuit);
                                                                           mAdapter.notifyDataSetChanged();
                                                                       }

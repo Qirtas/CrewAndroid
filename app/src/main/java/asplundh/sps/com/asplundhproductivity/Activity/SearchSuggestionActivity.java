@@ -195,7 +195,7 @@ public class SearchSuggestionActivity extends AppCompatActivity implements View.
                         String Id_subunit = subunit.opt("Id").toString();
                         String Title_subunit = subunit.opt("Title").toString();
                     
-                        SubUnit subUnit = new SubUnit(Id_subunit , Title_subunit);
+                        SubUnit subUnit = new SubUnit(Id_subunit , Title_subunit , id );
                         subunits_list.add(subUnit);
                     
                         Log.v(AppConstants.TAG , "subunit: " + subunit);
@@ -225,7 +225,7 @@ public class SearchSuggestionActivity extends AppCompatActivity implements View.
                             String Id_subunit = subunit.opt("Id").toString();
                             String Title_subunit = subunit.opt("Title").toString();
                         
-                            SubUnit subUnit = new SubUnit(Id_subunit , Title_subunit);
+                            SubUnit subUnit = new SubUnit(Id_subunit , Title_subunit , id_version);
                             subunits_list.add(subUnit);
                         
                             Log.v(AppConstants.TAG , "subunit: " + subunit);

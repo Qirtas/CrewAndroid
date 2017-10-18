@@ -3,6 +3,8 @@ package asplundh.sps.com.asplundhproductivity.Expandable;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
@@ -29,6 +31,7 @@ public class OuterViewHolder extends ParentViewHolder
     private final ImageView mArrowExpandImageView;
     private TextView title , versionNumber;
     public Context mContext;
+    SharedPreferences mPrefs;
     
     public OuterViewHolder(@NonNull View itemView , Context context) {
         super(itemView);
@@ -36,6 +39,7 @@ public class OuterViewHolder extends ParentViewHolder
         versionNumber = (TextView) itemView.findViewById(R.id.tv_versionNo);
         mArrowExpandImageView = (ImageView) itemView.findViewById(R.id.iv_Arrow);
         mContext = context;
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         
         itemView.setOnClickListener(new View.OnClickListener()
         {
@@ -75,7 +79,7 @@ public class OuterViewHolder extends ParentViewHolder
             public void onClick(View v)
             {
                 Log.w(AppConstants.TAG , "mArrowExpandImageView CLICKED  "+ getAdapterPosition() + "   BIDPLANID " + recipe.getId());
-                
+                mPrefs.edit().putString(AppConstants.BID_PLAN_ID , recipe.getId()).commit();
                 Intent i = new Intent(mContext , CircuitsActivity.class);
                 i.putExtra("BIDPLANID" , recipe.getId());
                 mContext.startActivity(i);

@@ -3,6 +3,12 @@ package asplundh.sps.com.asplundhproductivity.Utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
 import static android.provider.ContactsContract.Directory.PACKAGE_NAME;
 
@@ -25,6 +31,7 @@ public class AppConstants
     public static final String BASE_URL = "http://apabackend.mybluemix.net/mobile/";
     
     public static final String USER_ID = "user_id";
+    public static final String BID_PLAN_ID = "bid_plan_id";
     
     
     public static boolean isNetworkAvailable(Context context)
@@ -37,6 +44,15 @@ public class AppConstants
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
     
-   
     
+    public static String getISOCurrentTime()
+    {
+        TimeZone tz = TimeZone.getTimeZone("UTC");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // Quoted "Z" to indicate UTC, no timezone offset
+        df.setTimeZone(tz);
+        String nowAsISO = df.format(new Date());
+        Log.i(AppConstants.TAG , "nowAsISO: " + nowAsISO);
+        
+        return nowAsISO;
+    }
 }

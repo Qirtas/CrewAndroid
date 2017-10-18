@@ -3,6 +3,7 @@ package asplundh.sps.com.asplundhproductivity.Adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +12,10 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import asplundh.sps.com.asplundhproductivity.Activity.MapActivity;
+import asplundh.sps.com.asplundhproductivity.Activity.LocationDemoActivity;
 import asplundh.sps.com.asplundhproductivity.Model.Circuit;
 import asplundh.sps.com.asplundhproductivity.R;
+import asplundh.sps.com.asplundhproductivity.Utils.AppConstants;
 
 /**
  * Created by Malik Muhamad Qirtas on 10/12/2017.
@@ -36,13 +38,17 @@ public class CircuitAdapter extends RecyclerView.Adapter<CircuitAdapter.MyViewHo
             isAssigned = (ImageView) view.findViewById(R.id.isAssigned);
             
             context = view.getContext();
-            
+    
             view.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
                 {
-                    Intent i = new Intent(context , MapActivity.class);
+                    Log.v(AppConstants.TAG , "CLICKEDDD: " + getAdapterPosition() + "   " + circuitsList.get(getAdapterPosition()).getId());
+                    Intent i = new Intent(context , LocationDemoActivity.class);
+                    i.putExtra("CIRCUITID" , circuitsList.get(getAdapterPosition()).getId());
+                    i.putExtra("BIDPLANID" , circuitsList.get(getAdapterPosition()).getBidPlanID());
+    
                     context.startActivity(i);
                 }
             });

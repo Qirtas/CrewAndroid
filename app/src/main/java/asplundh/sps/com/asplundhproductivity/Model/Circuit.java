@@ -6,9 +6,9 @@ package asplundh.sps.com.asplundhproductivity.Model;
 
 public class Circuit
 {
-    String id, name, area , type , isAssigned , LinePath;
+    String id, name, area , type , isAssigned , LinePath , bidPlanID;
     
-    public Circuit(String id , String name, String area, String type, String isAssigned , String LinePath)
+    public Circuit(String id , String name, String area, String type, String isAssigned , String LinePath , String bidPlanID)
     {
         this.id = id;
         this.name = name;
@@ -16,6 +16,17 @@ public class Circuit
         this.type = type;
         this.isAssigned = isAssigned;
         this.LinePath = LinePath;
+        this.bidPlanID = bidPlanID;
+    }
+    
+    public String getBidPlanID()
+    {
+        return bidPlanID;
+    }
+    
+    public void setBidPlanID(String bidPlanID)
+    {
+        this.bidPlanID = bidPlanID;
     }
     
     public String getLinePath()

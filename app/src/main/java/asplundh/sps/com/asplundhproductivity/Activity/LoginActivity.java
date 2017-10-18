@@ -55,6 +55,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                              WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        
+        AppConstants.getISOCurrentTime();
     
         setupUI(findViewById(R.id.activity_login));
         mDB = new DBController(getApplicationContext());
