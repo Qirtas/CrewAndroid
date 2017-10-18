@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#6979BA</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="grey">#d3d4d9</color>
+    <color name="light_grey">#dfdfdf</color>
+    <color name="dark_grey">#a19f9f</color>
+    <color name="text_red">#ec5e64</color>
+    <color name="text_red_dark">#99cc00</color>
+    <color name="bg_color">#1BBC9B</color>
+    <color name="selector">#e7f1ef</color>
+    <color name="tab_selector">#09a385</color>
+    <color name="btn_color">#E64C66</color>
+    <color name="sos_cell">#C5FFF5</color>
+    <color name="top_bar">#00a187</color>
+    <color name="navigationBarColor">#000000</color>
+    <color name="active_edittext">#00d2ff</color>
+    <color name="toastcolor_error">#e64c66</color>
+    <color name="toastcolor_normal">#00a187</color>
+
+    <color name="textcolor_grey">#91e5d4</color>
+
+    <color name="cross_btn_color">#e60027</color>
+    <color name="more_color">#0b9579</color>
+    <color name="dark_grey_login">#393939</color>
+    <color name="chkin">#02ad65</color>
+    <color name="chkout">#f36e6e</color>
+    <color name="text_dim">#e47374</color>
+    <color name="orng">#f87045</color>
+    <color name="grey_bg">#F4F7FE</color>
+    <color name="blckk">#393939</color>
+    <color name="blueee">#6979BA</color>
+    <color name="chkinbox_bg">#ebeef5</color>
+    <color name="redd">#ed6666</color>
+    <color name="diem_blue">#a5a5a5</color>
+    <color name="error_white">#ffffff</color>
+    <color name="redd1">#fc8b12</color>
+
+    <color name="blue_top_bar">#6979ba</color>
+    <color name="blue_light">#e3e1e1</color>
+    <color name="blue_counter">#929ac2</color>
+    <color name="login_fields_ic">#7787c2</color>
+    <color name="blue_btn">#0c28b0</color>
+    <color name="blue_dark">#1b2b78</color>
+    <color name="light_blueee">#d3d4d9</color>#
+    <color name="blue_shade">#7886c3</color>
+    <color name="blue_light_text">#7887c2</color>
+
+
+</resources>

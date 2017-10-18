@@ -1,0 +1,61 @@
+<resources>
+    <string name="app_name">AsplundhProductivity</string>
+
+    <string name="accessToken">pk.eyJ1IjoicWlydGFzIiwiYSI6ImNqOGZoajV2ODA0NDEycXMxNDJqbHIydnkifQ.HB3H8VxTc9hW_XR1DDSZJg</string>
+
+    <!-- Login Activity -->
+    <string name="employee_id">Employee ID</string>
+    <string name="pin">PIN</string>
+    <string name="login">Log in</string>
+    <string name="or">OR</string>
+    <string name="scanning_employe_card">Scanning Employee Card</string> 
+    <string name="scan_my_employee_badge">Scan my employee badge</string>
+    <string name="scan_a_barcode">Scan a barcode</string> 
+    <string name="getting_data">Retrieving data…</string>
+     <string name="enter_employee_id">Enter your 10 digit employee ID</string> 
+    <string name="enter_valid_employee_id">Enter a valid employee ID</string>
+     
+    <string name="enter_four_digit_pin">Enter your 4 digit pin</string>
+    <string name="enter_valid_pin">Enter a valid pin</string>
+     <string name="please_wait_aunthenticating_msg">Authenticating, please wait.</string> 
+    <string name="foreperson_login_first">Please ask your foreperson to login first.</string> 
+    <string name="error_occured">An error occurred. Please try again.</string>
+
+
+    <string name="latitude_label">Latitude</string>
+    <string name="longitude_label">Longitude</string>
+    <string name="last_update_time_label">Last location update time</string>
+
+    <string name="start_updates">Start updates</string>
+    <string name="stop_updates">Stop updates</string>
+    <string name="location_updated_message">Location updated</string>
+
+    <string name="hours_prompt">Select type</string>
+
+    <string name="transmission">Transmission</string>
+    <string name="distribution">Distribution</string>
+    <string name="Other">Other</string>
+
+
+    <string-array name="hours_arrays">
+        <item>Bucket</item>
+        <item>Manual</item>
+        <item>Mow</item>
+    </string-array>
+
+
+    <string-array name="units_arrays">
+        <item>Spans</item>
+        <item>Trees</item>
+        <item>Trims</item>
+        <item>Removals</item>
+    </string-array>
+
+
+    <string-array name="distance_arrays">
+        <item>Feet</item>
+        <item>Miles</item>
+    </string-array>
+
+
+</resources>

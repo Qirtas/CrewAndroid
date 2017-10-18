@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_marginBottom="20dp"
+              android:layout_height="60dp">
+
+
+    <LinearLayout
+        android:id="@+id/lay"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/light_blueee"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="BID TITLE"
+            android:textStyle="bold"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:textSize="23sp"
+            android:layout_marginLeft="17dp"
+            android:textColor="@color/blue_dark"
+            />
+
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/arrow_expand_imageview"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="@drawable/note_icon"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="12dp"
+        />
+
+</RelativeLayout>

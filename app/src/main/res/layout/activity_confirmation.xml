@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="asplundh.sps.com.asplundhproductivity.Activity.ConfirmationActivity">
+
+    //Topbar
+    <RelativeLayout
+        android:id="@+id/lay_top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/blue_top_bar"
+        >
+
+        <LinearLayout
+            android:id="@+id/btn_backward"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            >
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/backward_ic"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="Home"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="6dp"
+                />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/btn_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/menu_ic"
+            android:visibility="gone"
+            />
+
+    </RelativeLayout>
+
+    //Confirmation
+
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lay_top_bar"
+        >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="10dp"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:text="Confirmation"
+            android:textColor="@color/grey"
+            android:textStyle="bold"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp"
+            >
+            <TextView
+                android:id="@+id/tv_one_heading"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="Hours"
+                android:textSize="18sp"
+                android:textColor="@color/grey"
+                />
+
+            <TextView
+                android:id="@+id/tv_counter1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textStyle="italic"
+                android:text="223"
+                android:textColor="@color/grey"
+                />
+
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="12dp"
+        >
+        <TextView
+            android:id="@+id/tv_two_heading"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="Hours"
+            android:textSize="18sp"
+            android:textColor="@color/grey"
+            />
+
+        <TextView
+            android:id="@+id/tv_counter2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textStyle="italic"
+            android:text="223"
+            android:textColor="@color/grey"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="12dp"
+        >
+        <TextView
+            android:id="@+id/tv_three_heading"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="Hours"
+            android:textSize="18sp"
+            android:textColor="@color/grey"
+            />
+
+        <TextView
+            android:id="@+id/tv_counter3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textStyle="italic"
+            android:text="Hours:   223"
+            android:textColor="@color/grey"
+            />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="12dp"
+        >
+        <TextView
+            android:id="@+id/tv_four_heading"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="Hours"
+            android:textSize="18sp"
+            android:textColor="@color/grey"
+            />
+
+        <TextView
+            android:id="@+id/tv_lat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textStyle="italic"
+            android:text="Hours:   223"
+            android:textColor="@color/grey"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="12dp"
+        >
+        <TextView
+            android:id="@+id/tv_five_heading"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="Hours"
+            android:textSize="18sp"
+            android:textColor="@color/grey"
+            />
+
+        <TextView
+            android:id="@+id/tv_lng"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textStyle="italic"
+            android:text="Hours:   223"
+            android:textColor="@color/grey"
+            />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="12dp"
+        >
+        <TextView
+            android:id="@+id/tv_six_heading"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="Hours"
+            android:textSize="18sp"
+            android:textColor="@color/grey"
+            />
+
+        <TextView
+            android:id="@+id/tv_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textStyle="italic"
+            android:text="Hours:   223"
+            android:textColor="@color/grey"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="12dp"
+        >
+        <TextView
+            android:id="@+id/tv_seven_heading"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="Hours"
+            android:textSize="18sp"
+            android:textColor="@color/grey"
+            />
+
+        <TextView
+            android:id="@+id/tv_radius"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textStyle="italic"
+            android:text=""
+            android:textColor="@color/grey"
+            />
+    </LinearLayout>
+
+
+        //Text note
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp"
+            >
+            <TextView
+                android:id="@+id/tv_eight_heading"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="Text note"
+                android:textSize="18sp"
+                android:textColor="@color/grey"
+                />
+
+            <TextView
+                android:id="@+id/tv_text_note"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textStyle="italic"
+                android:text=""
+                android:textColor="@color/grey"
+                />
+        </LinearLayout>
+
+
+        //Voice note
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp"
+            >
+            <TextView
+                android:id="@+id/tv_nine_heading"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="Voice note"
+                android:textSize="18sp"
+                android:textColor="@color/grey"
+                />
+
+            <Button
+                android:id="@+id/btn_play_audio"
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                android:background="@drawable/play"
+                />
+
+            <SeekBar
+                android:id="@+id/seekBar1"
+                android:layout_width="130dp"
+                android:layout_height="30dp" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    </ScrollView>
+    //Buttons
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="12dp"
+        android:weightSum="2"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        >
+        <RelativeLayout
+            android:id="@+id/btn_back"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@color/blueee"
+            android:layout_weight="1"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="16dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Back"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:layout_centerInParent="true"
+                />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@color/blueee"
+            android:layout_weight="1"
+            android:layout_marginRight="12dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Confirm"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:layout_centerInParent="true"
+                />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
