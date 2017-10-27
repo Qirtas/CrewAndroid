@@ -126,6 +126,7 @@ public class LocationActivity extends AppCompatActivity implements GoogleApiClie
                              WindowManager.LayoutParams.FLAG_FULLSCREEN);
     
         
+        
       /*  for(int i=0; i< points.size(); i++)
         {
             Log.i(AppConstants.TAG , "POINTS:" + points.get(i).toString());
@@ -669,8 +670,10 @@ public class LocationActivity extends AppCompatActivity implements GoogleApiClie
         mMap = googleMap;
         BitmapDescriptor image = BitmapDescriptorFactory.fromResource(R.drawable.add_note_ic);
         TileOverlayOptions opts = new TileOverlayOptions();
-
-
+        
+        mMap.addTileOverlay(new TileOverlayOptions().tileProvider(new CustomMapTileProvider(getResources().getAssets())));
+    
+        progress.dismiss();
       //  drawLine();
     }
     

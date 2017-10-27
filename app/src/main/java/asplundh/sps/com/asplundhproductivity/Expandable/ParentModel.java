@@ -10,16 +10,61 @@ import java.util.List;
 
 public class ParentModel implements Parent<ChildModel>
 {
-    private String id , customerBidID , title , versionNumber;
+    private String id , customerBidID , title , versionNumber , subUnits , unit;
     private List<ChildModel> mIngredients;
+    boolean isOnline , isSynced;
     
-    public ParentModel(String id , String customerBidID , String name, String versionNumber ,  List<ChildModel> mIngredients)
+    public ParentModel(String id , String customerBidID , String name, String versionNumber ,  List<ChildModel> mIngredients , boolean isOnline, boolean isSynced , String subUnits , String unit)
     {
         this.id = id;
         this.customerBidID = customerBidID;
         this.title = name;
         this.versionNumber = versionNumber;
         this.mIngredients = mIngredients;
+        this.isOnline = isOnline;
+        this.isSynced = isSynced;
+        this.subUnits = subUnits;
+        this.unit = unit;
+    }
+    
+    public String getUnit()
+    {
+        return unit;
+    }
+    
+    public void setUnit(String unit)
+    {
+        this.unit = unit;
+    }
+    
+    public String getSubUnits()
+    {
+        return subUnits;
+    }
+    
+    public void setSubUnits(String subUnits)
+    {
+        this.subUnits = subUnits;
+    }
+    
+    public boolean isSynced()
+    {
+        return isSynced;
+    }
+    
+    public void setSynced(boolean synced)
+    {
+        isSynced = synced;
+    }
+    
+    public boolean isOnline()
+    {
+        return isOnline;
+    }
+    
+    public void setOnline(boolean online)
+    {
+        isOnline = online;
     }
     
     public String getId()

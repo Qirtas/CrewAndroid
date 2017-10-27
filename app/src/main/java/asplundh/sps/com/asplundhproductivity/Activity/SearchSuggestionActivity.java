@@ -1,7 +1,9 @@
 package asplundh.sps.com.asplundhproductivity.Activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,11 +24,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import asplundh.sps.com.asplundhproductivity.Adapter.CircuitAdapter;
 import asplundh.sps.com.asplundhproductivity.Expandable.ChildModel;
 import asplundh.sps.com.asplundhproductivity.Expandable.ParentModel;
 import asplundh.sps.com.asplundhproductivity.Expandable.RecipeAdapter;
-import asplundh.sps.com.asplundhproductivity.Model.Circuit;
+import asplundh.sps.com.asplundhproductivity.ExpandableCircuit.CircuitChildModel;
+import asplundh.sps.com.asplundhproductivity.ExpandableCircuit.CircuitExpandAdapter;
+import asplundh.sps.com.asplundhproductivity.ExpandableCircuit.CircuitParentModel;
 import asplundh.sps.com.asplundhproductivity.Model.SubUnit;
 import asplundh.sps.com.asplundhproductivity.R;
 import asplundh.sps.com.asplundhproductivity.Utils.AppConstants;
@@ -39,11 +42,15 @@ public class SearchSuggestionActivity extends AppCompatActivity implements View.
     EditText et_search;
     List<ParentModel> filteredList;
     
-    private List<Circuit> circuitsList = new ArrayList<>();
-    private CircuitAdapter mCircuitAdapter;
-    List<Circuit> circuitsFilteredList;
+   // private List<Circuit> circuitsList = new ArrayList<>();
+   // private CircuitAdapter mCircuitAdapter;
     
+    List<CircuitParentModel> circuitsFilteredList;
+    SharedPreferences mPrefs;
     
+    private CircuitExpandAdapter mAdapterExpand;
+    ArrayList<CircuitParentModel> parentListCircuit = new ArrayList<>();
+    String bidplanid = "";
     
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -53,7 +60,8 @@ public class SearchSuggestionActivity extends AppCompatActivity implements View.
     
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                              WindowManager.LayoutParams.FLAG_FULLSCREEN);
-    
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        
         ImageView back_ic = (ImageView) findViewById(R.id.back_ic);
         back_ic.setOnClickListener(this);
         ImageView logout_ic = (ImageView) findViewById(R.id.logout_ic);
@@ -63,10 +71,11 @@ public class SearchSuggestionActivity extends AppCompatActivity implements View.
         recyclerView = (RecyclerView) findViewById(R.id.suggestions_recycler_view);
         
         String searchType = getIntent().getStringExtra("TYPE");
+        bidplanid = getIntent().getStringExtra("BIDPLANID");
+    
     
         if(searchType.equalsIgnoreCase("BIDPLANS"))
         {
-            
             mAdapter = new RecipeAdapter( SearchSuggestionActivity.this , parentList);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
             recyclerView.setLayoutManager(mLayoutManager);
@@ -77,15 +86,16 @@ public class SearchSuggestionActivity extends AppCompatActivity implements View.
         }
         else
         {
-            mCircuitAdapter = new CircuitAdapter(circuitsList);
+            Log.i(AppConstants.TAG , "CIRCUITSS");
+    
+            mAdapterExpand = new CircuitExpandAdapter(SearchSuggestionActivity.this  , parentListCircuit);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
             recyclerView.setLayoutManager(mLayoutManager);
             recyclerView.setItemAnimator(new DefaultItemAnimator());
-            recyclerView.setAdapter(mCircuitAdapter);
+            recyclerView.setAdapter(mAdapterExpand);
             getCircuitsLocally();
             addCircuitsTextListener();
         }
-        
         
     }
     
@@ -103,20 +113,20 @@ public class SearchSuggestionActivity extends AppCompatActivity implements View.
     
                 circuitsFilteredList = new ArrayList<>();
             
-                for (int i = 0; i < circuitsList.size(); i++)
+                for (int i = 0; i < parentListCircuit.size(); i++)
                 {
-                    final String text = circuitsList.get(i).getName().toLowerCase();
+                    final String text = parentListCircuit.get(i).getTitle().toLowerCase();
                     if (text.contains(query)) {
     
-                        circuitsFilteredList.add(circuitsList.get(i));
+                        circuitsFilteredList.add(parentListCircuit.get(i));
                     }
                 }
             
                 recyclerView.setLayoutManager(new LinearLayoutManager(SearchSuggestionActivity.this));
-                mCircuitAdapter = new CircuitAdapter(circuitsFilteredList);
+                mAdapterExpand = new CircuitExpandAdapter(SearchSuggestionActivity.this , circuitsFilteredList);
             
-                recyclerView.setAdapter(mCircuitAdapter);
-                mCircuitAdapter.notifyDataSetChanged();  // data set changed
+                recyclerView.setAdapter(mAdapterExpand);
+                mAdapterExpand.notifyDataSetChanged();  // data set changed
             }
         });
     }
@@ -235,10 +245,10 @@ public class SearchSuggestionActivity extends AppCompatActivity implements View.
                     
                         ArrayList<ChildModel> childlist =  new ArrayList<>();
                     
-                        ChildModel childitem = new ChildModel(VersionNumber_version , Metric_version , CustomerName_version ,  City_version ,  Country_version, subunits_list_version, true , LocDescription_version);
+                        ChildModel childitem = new ChildModel(VersionNumber_version , Metric_version , CustomerName_version ,  City_version ,  Country_version, subunits_list_version, true , LocDescription_version , subUnits_version.toString());
                         childlist.add(childitem);
                     
-                        ParentModel parentitem = new ParentModel(id_version ,  CustomerBidId_version , Title_version,VersionNumber_version , childlist );
+                        ParentModel parentitem = new ParentModel(id_version ,  CustomerBidId_version , Title_version,VersionNumber_version , childlist , true , false , subUnits_version.toString() , Metric_version);
                         parentList.add(parentitem);
                     }
                 
@@ -254,10 +264,10 @@ public class SearchSuggestionActivity extends AppCompatActivity implements View.
                 
                     ArrayList<ChildModel> childlist =  new ArrayList<>();
                 
-                    ChildModel childitem = new ChildModel(VersionNumber , Metric , CustomerName ,  City ,  Country, subunits_list,true , LocationDescription);
+                    ChildModel childitem = new ChildModel(VersionNumber , Metric , CustomerName ,  City ,  Country, subunits_list,true , LocationDescription , subUnits.toString());
                     childlist.add(childitem);
                 
-                    ParentModel parentitem = new ParentModel(id ,  CustomerBidId , Title,VersionNumber , childlist );
+                    ParentModel parentitem = new ParentModel(id ,  CustomerBidId , Title,VersionNumber , childlist , true , false , subUnits.toString() , Metric);
                     parentList.add(parentitem);
                 
                     mAdapter.notifyParentDataSetChanged(true);
@@ -274,14 +284,59 @@ public class SearchSuggestionActivity extends AppCompatActivity implements View.
     
     public void getCircuitsLocally()
     {
-        /*Circuit circuit = new Circuit("Spruce 710D", "10 Miles" , "Transmission" , "yes");
-        circuitsList.add(circuit);circuit = new Circuit("Spruce 710D", "10 Miles" , "Distribution" , "yes");
-        circuitsList.add(circuit);circuit = new Circuit("Spruce 715D", "15 Miles" , "Transmission" , "yes");
-        circuitsList.add(circuit);circuit = new Circuit("Spruce 713D", "23 Miles" , "Distribution" , "yes");
-        circuitsList.add(circuit);circuit = new Circuit("Spruce 719D", "2 Miles" , "Distribution" , "yes");
-        circuitsList.add(circuit);circuit = new Circuit("Spruce 725D", "13 Miles" , "Transmission" , "yes");
-        circuitsList.add(circuit);circuit = new Circuit("Spruce 787D", "21 Miles" , "Transmission" , "yes");
-        circuitsList.add(circuit);*/
+        try
+        {
+            JSONObject jsonObj = new JSONObject(CircuitsActivity.circuitsJson);
+        
+            boolean success = jsonObj.getBoolean("success");
+            String message = jsonObj.getString("message");
+        
+            
+            JSONObject result = jsonObj.getJSONObject("result");
+            JSONArray circuitsArray = result.getJSONArray("Circuits");
+            
+                for(int i=0; i<circuitsArray.length(); i++)
+                {
+                    JSONObject object = circuitsArray.getJSONObject(i);
+                    String circuitID =  object.opt("Id").toString();
+                    String circuitTitle =  object.opt("Title").toString();
+                    String circuitMilage =  object.opt("Milage").toString();
+                    String EquipmentNotes =  object.opt("EquipmentNotes").toString();
+                    String SurveysCount =  object.opt("SurveysCount").toString();
+                    String circuitLineType =  object.opt("LineType").toString();
+                    String circuitIsDelegated =  object.opt("IsDelegated").toString();
+                    String circuitLinePath =  object.opt("LinePath").toString();
+    
+                    ArrayList<CircuitChildModel> childlist =  new ArrayList<>();
+                    CircuitChildModel childitem = new CircuitChildModel(circuitLineType , circuitMilage , SurveysCount , EquipmentNotes , true);
+                    childlist.add(childitem);
+    
+                    CircuitParentModel parentitem = new CircuitParentModel(circuitID , circuitTitle , circuitIsDelegated, childlist , bidplanid);
+                    parentListCircuit.add(parentitem);
+                    
+                    mAdapterExpand.notifyParentDataSetChanged(true);
+                    mAdapterExpand.notifyDataSetChanged();
+                    recyclerView.setLayoutManager(new LinearLayoutManager(SearchSuggestionActivity.this));
+                }
+            
+                /*JSONArray circuitTypesArray = result.getJSONArray("CircuitTypes");
+            
+                for(int i=0; i<circuitTypesArray.length(); i++)
+                {
+                    JSONObject object = circuitTypesArray.getJSONObject(i);
+                    String circuitTypeID =  object.opt("Id").toString();
+                    String circuitTypeTitle =  object.opt("Title").toString();
+                
+                    CircuitType circuitType = new CircuitType(circuitTypeID , circuitTypeTitle);
+                    circuitTypesList.add(circuitType);
+                }*/
+            
+        }
+        catch (JSONException e)
+        {
+        
+        }
+      
     }
     
     @Override

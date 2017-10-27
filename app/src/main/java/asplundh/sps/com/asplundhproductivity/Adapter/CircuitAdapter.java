@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -45,11 +46,24 @@ public class CircuitAdapter extends RecyclerView.Adapter<CircuitAdapter.MyViewHo
                 public void onClick(View v)
                 {
                     Log.v(AppConstants.TAG , "CLICKEDDD: " + getAdapterPosition() + "   " + circuitsList.get(getAdapterPosition()).getId());
-                    Intent i = new Intent(context , LocationDemoActivity.class);
-                    i.putExtra("CIRCUITID" , circuitsList.get(getAdapterPosition()).getId());
-                    i.putExtra("BIDPLANID" , circuitsList.get(getAdapterPosition()).getBidPlanID());
     
-                    context.startActivity(i);
+                    Log.v(AppConstants.TAG , "CLICKEDDD LINE path: " + getAdapterPosition() + "   " + circuitsList.get(getAdapterPosition()).getLinePath());
+    
+                    if(AppConstants.isNetworkAvailable(context))
+                    {
+                        Intent i = new Intent(context , LocationDemoActivity.class);
+                        i.putExtra("CIRCUITID" , circuitsList.get(getAdapterPosition()).getId());
+                        i.putExtra("BIDPLANID" , circuitsList.get(getAdapterPosition()).getBidPlanID());
+                        i.putExtra("CIRCUITTITLE" , circuitsList.get(getAdapterPosition()).getName());
+    
+                        context.startActivity(i);
+                    }
+                    else
+                    {
+                        Toast.makeText(context , "Network not available!",
+                                       Toast.LENGTH_LONG).show();
+                    }
+                   
                 }
             });
         }
@@ -72,8 +86,15 @@ public class CircuitAdapter extends RecyclerView.Adapter<CircuitAdapter.MyViewHo
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Circuit circuit = circuitsList.get(position);
         holder.name.setText(circuit.getName());
-        holder.area.setText(circuit.getArea());
+        
         holder.type.setText(circuit.getType());
+        
+        if(!circuit.getArea().equalsIgnoreCase(""))
+        {
+            double value = Double.parseDouble(circuit.getArea());
+            double valueRounded = Math.round(value * 100D) / 100D;
+            holder.area.setText(String.format("%.1f", valueRounded) + " Miles");
+        }
         
         String isAssigned = circuit.getIsAssigned();
         if(isAssigned.equalsIgnoreCase("0"))

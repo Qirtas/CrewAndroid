@@ -37,7 +37,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -75,7 +74,9 @@ import org.json.JSONObject;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Random;
 
+import asplundh.sps.com.asplundhproductivity.Helper.DBController;
 import asplundh.sps.com.asplundhproductivity.Model.CounterPoint;
 import asplundh.sps.com.asplundhproductivity.Model.Note;
 import asplundh.sps.com.asplundhproductivity.Model.Point;
@@ -83,6 +84,9 @@ import asplundh.sps.com.asplundhproductivity.Model.SubUnit;
 import asplundh.sps.com.asplundhproductivity.R;
 import asplundh.sps.com.asplundhproductivity.Singleton.MySingleton;
 import asplundh.sps.com.asplundhproductivity.Utils.AppConstants;
+
+import static asplundh.sps.com.asplundhproductivity.Activity.LocationDemoActivity.Lat;
+import static asplundh.sps.com.asplundhproductivity.Activity.LocationDemoActivity.Lng;
 
 public class CircuitEstimationActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
@@ -121,13 +125,18 @@ public class CircuitEstimationActivity extends AppCompatActivity implements Goog
     ArrayList<Point> userPathPointsArray= new ArrayList<Point>();
     ArrayList<CounterPoint> counterPointsArray= new ArrayList<CounterPoint>();
     
-    int counter_one = 0 , counter_two = 0, counter_three = 0;
+    int counter_one = 0 , counter_two = 0, counter_three = 0 , counter_four = 0 , counter_five = 0 , counter_six = 0;
     public String CircuitID = "" , bidPlanID = "" , startTime = "";
     String LAT_Current = "" , LNG_Current = "";
     
     SharedPreferences mPrefs;
     boolean isPause = false;
+    ImageView iv_pause_resume;
+    String circuitSurveyPathArray , circuitName = "";
+    DBController mDB;
+    TextView tv_bid_plan_unit;
     
+    double startLat = 0, startLng = 0 , endLat = 0 , endLng = 0;
     
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -136,13 +145,21 @@ public class CircuitEstimationActivity extends AppCompatActivity implements Goog
         Mapbox.getInstance(this, "pk.eyJ1IjoicWlydGFzIiwiYSI6ImNqOGZoajV2ODA0NDEycXMxNDJqbHIydnkifQ.HB3H8VxTc9hW_XR1DDSZJg");
         
         setContentView(R.layout.activity_circuit_estimation);
-        //setupUI(findViewById(R.id.circuit_lay));
+        setupUI(findViewById(R.id.circuit_lay));
         
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                              WindowManager.LayoutParams.FLAG_FULLSCREEN);
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        mDB = new DBController(getApplicationContext());
         
-        optionsBLACK = new PolylineOptions().width(7).color(Color.BLACK);
+        RelativeLayout loc_cuurent_ic = (RelativeLayout) findViewById(R.id.loc_cuurent_ic);
+        loc_cuurent_ic.setOnClickListener(this);
+        
+        String unit = mPrefs.getString(AppConstants.UNIT , "unit");
+        
+        tv_bid_plan_unit = (TextView) findViewById(R.id.tv_bid_plan_unit);
+        tv_bid_plan_unit.setText("Bid plan unit:" + unit);
+        
         optionsGREEN = new PolylineOptions().width(7).color(Color.GREEN);
     
         vibrator = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
@@ -151,9 +168,18 @@ public class CircuitEstimationActivity extends AppCompatActivity implements Goog
         CircuitID = getIntent().getStringExtra("CIRCUITID");
         bidPlanID = getIntent().getStringExtra("BIDPLANID");
         startTime = getIntent().getStringExtra("STARTTIME");
+        circuitName = getIntent().getStringExtra("CIRCUITNAME");
+        
+        TextView tv_circuit_name = (TextView) findViewById(R.id.tv_circuit_name);
+        tv_circuit_name.setText(circuitName);
+    
+        circuitSurveyPathArray = getIntent().getStringExtra("CircuitSurveyPath");
         
         pointsArray = (ArrayList<Point>) getIntent().getSerializableExtra("POINTSARRAY");
-        String subunits = getIntent().getStringExtra("SUBUNITSARRAY");
+      //  String subunits = getIntent().getStringExtra("SUBUNITSARRAY");
+        
+        String subunits = mPrefs.getString(AppConstants.SUB_UNITS , "");
+        Log.v(AppConstants.TAG , "subunits from prefs: " + subunits);
         
         try
         {
@@ -171,7 +197,7 @@ public class CircuitEstimationActivity extends AppCompatActivity implements Goog
                 subUnitsArray.add(subUnit);
             }
         }
-        catch (JSONException e)
+        catch (JSONException|NullPointerException e)
         {
             Log.e(AppConstants.TAG , "JSONException while parsing subunits: " + e.toString());
         }
@@ -180,6 +206,9 @@ public class CircuitEstimationActivity extends AppCompatActivity implements Goog
         {
             Log.w(AppConstants.TAG , "subUnitsArray: " + subUnitsArray.get(j).getId());
         }
+    
+        Log.d(AppConstants.TAG , "subUnitsArray size: " + subUnitsArray.size());
+        counterCount = subUnitsArray.size();
         
         btn_note = (ImageView) findViewById(R.id.btn_note);
         btn_note.setOnClickListener(this);
@@ -206,9 +235,12 @@ public class CircuitEstimationActivity extends AppCompatActivity implements Goog
                
                 CameraUpdate center=
                         CameraUpdateFactory.newLatLng(new LatLng(33.684132, 73.045020));
-                CameraUpdate zoom= CameraUpdateFactory.zoomTo(15);
+               /* CameraUpdate zoom= CameraUpdateFactory.zoomTo(17);
                 mapboxMap.moveCamera(center);
-                mapboxMap.animateCamera(zoom);
+                mapboxMap.animateCamera(zoom);*/
+    
+                map.moveCamera(center);
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(33.684132, 73.045020), 16.0f));
             
                 LatLngBounds latLngBounds = new LatLngBounds.Builder()
                         .include(new LatLng(33.587444, 73.092093)) // Northeast
@@ -236,8 +268,28 @@ public class CircuitEstimationActivity extends AppCompatActivity implements Goog
                 options.add(point);
                 options.add(point1);options.add(point2);
     
-                drawCircuit(pointsArray);
-            
+                if(pointsArray != null)
+                {
+                    drawCircuit(pointsArray , "DELEGATED");
+                }
+                else
+                {
+                    mapView.getMapAsync(new OnMapReadyCallback()
+                    {
+                        @Override
+                        public void onMapReady(MapboxMap mapboxMap)
+                        {
+                            CameraUpdate center=
+                                    CameraUpdateFactory.newLatLng(new LatLng(Lat , Lng));
+                            CameraUpdate zoom= CameraUpdateFactory.zoomTo(18);
+                            map.moveCamera(center);
+                            map.animateCamera(zoom);
+                        }
+                    });
+                }
+    
+                ParseCircuitPath();
+                
                 //  updateMarker(mCurrentLocation.getLatitude() , mCurrentLocation.getLongitude());
                 //  mapboxMap.addPolyline(options);
             
@@ -251,7 +303,8 @@ public class CircuitEstimationActivity extends AppCompatActivity implements Goog
         TextView tv_unit_five = (TextView) findViewById(R.id.tv_unit_five);
         TextView tv_unit_six = (TextView) findViewById(R.id.tv_unit_six);
         
-         tv_pauseresume = (TextView) findViewById(R.id.tv_pauseresume);
+        tv_pauseresume = (TextView) findViewById(R.id.tv_pauseresume);
+        iv_pause_resume = (ImageView) findViewById(R.id.iv_pause_resume);
         
         ImageView back_ic = (ImageView) findViewById(R.id.back_ic);
         back_ic.setOnClickListener(this);
@@ -260,8 +313,8 @@ public class CircuitEstimationActivity extends AppCompatActivity implements Goog
         RelativeLayout btn_finish = (RelativeLayout) findViewById(R.id.btn_finish);
         btn_finish.setOnClickListener(this);
         
-        RelativeLayout lay_top_row = (RelativeLayout) findViewById(R.id.lay_top_row);
-        RelativeLayout lay_bottom_row = (RelativeLayout) findViewById(R.id.lay_bottom_row);
+        LinearLayout lay_top_row = (LinearLayout) findViewById(R.id.lay_top_row);
+        LinearLayout lay_bottom_row = (LinearLayout) findViewById(R.id.lay_bottom_row);
         RelativeLayout btn_pause = (RelativeLayout) findViewById(R.id.btn_pause);
         btn_pause.setOnClickListener(this);
     
@@ -281,12 +334,24 @@ public class CircuitEstimationActivity extends AppCompatActivity implements Goog
         final EditText et_counter_three = (EditText) findViewById(R.id.et_counter_three);
         et_counter_three.setText(counter_three + "");
     
+        final EditText et_counter_four = (EditText) findViewById(R.id.et_counter_four);
+        et_counter_four.setText(counter_four + "");
+        
+        final EditText et_counter_five = (EditText) findViewById(R.id.et_counter_five);
+        et_counter_five.setText(counter_five + "");
+    
+        final EditText et_counter_six = (EditText) findViewById(R.id.et_counter_six);
+        et_counter_six.setText(counter_six + "");
+    
         btn_one.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                CounterPoint counterPoint = new CounterPoint(subUnitsArray.get(0).getId() , "1" , LAT_Current , LNG_Current);
+                
+                String unit_id = subUnitsArray.get(0).getId();
+                
+                CounterPoint counterPoint = new CounterPoint(unit_id , "1" , LAT_Current , LNG_Current);
                 counterPointsArray.add(counterPoint);
                 
                Log.w(AppConstants.TAG , "onClick");
@@ -377,7 +442,18 @@ public class CircuitEstimationActivity extends AppCompatActivity implements Goog
             @Override
             public void onClick(View v)
             {
-                CounterPoint counterPoint = new CounterPoint(subUnitsArray.get(2).getId() , "1" , LAT_Current , LNG_Current);
+                String unitID = "";
+                
+                if(counterCount == 4)
+                {
+                     unitID = subUnitsArray.get(1).getId();
+                }
+                else
+                {
+                    unitID = subUnitsArray.get(2).getId();
+                }
+                
+                CounterPoint counterPoint = new CounterPoint(unitID , "1" , LAT_Current , LNG_Current);
                 counterPointsArray.add(counterPoint);
                 
                 Log.w(AppConstants.TAG , "onClick");
@@ -417,35 +493,170 @@ public class CircuitEstimationActivity extends AppCompatActivity implements Goog
             }
         });
         
-        /////////////////////////////////////////////////
-        
-        Log.d(AppConstants.TAG , "subUnitsArray size: " + subUnitsArray.size());
-        counterCount = subUnitsArray.size();
+        btn_four.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                String unitId = "";
                 
-        if(counterCount == 3)
+                if(counterCount == 4)
+                {
+                     unitId = subUnitsArray.get(2).getId();
+                }
+                else
+                {
+                    unitId = subUnitsArray.get(3).getId();
+                }
+                
+                CounterPoint counterPoint = new CounterPoint(unitId , "1" , LAT_Current , LNG_Current);
+                counterPointsArray.add(counterPoint);
+        
+                Log.w(AppConstants.TAG , "onClick");
+                vibrator.vibrate(200);
+                mp.start();
+        
+                String countervalueFour = et_counter_four.getText().toString();
+                counter_four = Integer.parseInt(countervalueFour);
+    
+                counter_four++;
+                et_counter_four.setText(counter_four + "");
+                et_counter_four.setEnabled(false);
+        
+            }
+        });
+    
+    
+        btn_five.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                CounterPoint counterPoint = new CounterPoint(subUnitsArray.get(4).getId() , "1" , LAT_Current , LNG_Current);
+                counterPointsArray.add(counterPoint);
+            
+                Log.w(AppConstants.TAG , "onClick");
+                vibrator.vibrate(200);
+                mp.start();
+            
+                String countervalueFive = et_counter_five.getText().toString();
+                counter_five = Integer.parseInt(countervalueFive);
+    
+                counter_five++;
+                et_counter_five.setText(counter_five + "");
+                et_counter_five.setEnabled(false);
+            
+            }
+        });
+    
+        btn_six.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                String unitID = "";
+    
+                if(counterCount == 4)
+                {
+                    unitID = subUnitsArray.get(3).getId();
+                }
+                else if(counterCount == 5)
+                {
+                    unitID = subUnitsArray.get(4).getId();
+                }
+                else
+                    unitID = subUnitsArray.get(5).getId();
+                
+                CounterPoint counterPoint = new CounterPoint(unitID , "1" , LAT_Current , LNG_Current);
+                counterPointsArray.add(counterPoint);
+            
+                Log.w(AppConstants.TAG , "onClick");
+                vibrator.vibrate(200);
+                mp.start();
+            
+                String countervalueSix = et_counter_six.getText().toString();
+                counter_six = Integer.parseInt(countervalueSix);
+    
+                counter_six++;
+                et_counter_six.setText(counter_six + "");
+                et_counter_six.setEnabled(false);
+            
+            }
+        });
+        
+        /////////////////////////////////////////////////
+    
+        RelativeLayout tope_row_extra_btn = (RelativeLayout) findViewById(R.id.tope_row_extra_btn);
+        RelativeLayout bottom_row_extra_btn = (RelativeLayout) findViewById(R.id.bottom_row_extra_btn);
+        
+       // counterCount = 1;
+        if(counterCount == 0)
+        {
+            lay_bottom_row.setVisibility(View.GONE);
+            lay_top_row.setVisibility(View.GONE);
+        }
+        
+        else if(counterCount == 1)
+        {
+            lay_bottom_row.setVisibility(View.GONE);
+            tope_row_extra_btn.setVisibility(View.INVISIBLE);
+            btn_two.setVisibility(View.GONE);
+            btn_three.setVisibility(View.GONE);
+    
+            tv_unit_one.setText(subUnitsArray.get(0).getTitle());
+        }
+        else if(counterCount == 2)
+        {
+            lay_bottom_row.setVisibility(View.GONE);
+    
+            btn_three.setVisibility(View.GONE);
+            tope_row_extra_btn.setVisibility(View.INVISIBLE);
+    
+            tv_unit_one.setText(subUnitsArray.get(0).getTitle());
+            tv_unit_two.setText(subUnitsArray.get(1).getTitle());
+        }
+        
+        else if(counterCount == 3)
         {
             lay_bottom_row.setVisibility(View.GONE);
             
             tv_unit_one.setText(subUnitsArray.get(0).getTitle());
             tv_unit_two.setText(subUnitsArray.get(1).getTitle());
             tv_unit_three.setText(subUnitsArray.get(2).getTitle());
-    
         }
-        
         else if(counterCount == 4)
         {
             btn_two.setVisibility(View.GONE);
             btn_five.setVisibility(View.GONE);
     
-           /* final float scale = getResources().getDisplayMetrics().density;
-            int dpWidthInPx  = (int) (120 * scale);
-            int dpHeightInPx = (int) (120 * scale);
+            bottom_row_extra_btn.setVisibility(View.INVISIBLE);
+            tope_row_extra_btn.setVisibility(View.INVISIBLE);
+    
+            tv_unit_one.setText(subUnitsArray.get(0).getTitle());
+            tv_unit_three.setText(subUnitsArray.get(1).getTitle());
+            tv_unit_four.setText(subUnitsArray.get(2).getTitle());
+            tv_unit_six.setText(subUnitsArray.get(3).getTitle());
             
-            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-                    dpWidthInPx, dpHeightInPx);
-            layoutParams.setMargins(130, 0, 30, 20);
-            btn_one.setLayoutParams(layoutParams);*/
-            
+        }
+        else if(counterCount == 5)
+        {
+            btn_five.setVisibility(View.GONE);
+            bottom_row_extra_btn.setVisibility(View.INVISIBLE);
+    
+            tv_unit_one.setText(subUnitsArray.get(0).getTitle());
+            tv_unit_two.setText(subUnitsArray.get(1).getTitle());
+            tv_unit_three.setText(subUnitsArray.get(2).getTitle());
+            tv_unit_four.setText(subUnitsArray.get(3).getTitle());
+            tv_unit_six.setText(subUnitsArray.get(4).getTitle());
+        }
+        else if(counterCount == 6)
+        {
+            tv_unit_one.setText(subUnitsArray.get(0).getTitle());
+            tv_unit_two.setText(subUnitsArray.get(1).getTitle());
+            tv_unit_three.setText(subUnitsArray.get(2).getTitle());
+            tv_unit_four.setText(subUnitsArray.get(3).getTitle());
+            tv_unit_five.setText(subUnitsArray.get(4).getTitle());
+            tv_unit_six.setText(subUnitsArray.get(5).getTitle());
         }
         
     }
@@ -459,6 +670,10 @@ public class CircuitEstimationActivity extends AppCompatActivity implements Goog
         {
             case R.id.back_ic:
                 finish();
+                break;
+    
+            case R.id.loc_cuurent_ic:
+                moveMapToCurrentLocation();
                 break;
             
             case R.id.logout_ic:
@@ -480,16 +695,34 @@ public class CircuitEstimationActivity extends AppCompatActivity implements Goog
                 if(!isPause)
                 {
                     tv_pauseresume.setText("Resume");
+                    iv_pause_resume.setImageResource(R.drawable.play_btnn);
                     isPause = true;
                 }
                 else
                 {
                     tv_pauseresume.setText("Pause");
+                    iv_pause_resume.setImageResource(R.drawable.pause_iconn);
                     isPause = false;
                 }
                 
                 break;
             
+        }
+    }
+    
+    public void moveMapToCurrentLocation()
+    {
+        Log.v(AppConstants.TAG , "*****");
+        if(map != null && LAT_Current != "")
+        {
+            Log.v(AppConstants.TAG , "moveMapToCurrentLocation");
+            CameraUpdate center=
+                    CameraUpdateFactory.newLatLng(new LatLng(Double.parseDouble(LAT_Current), Double.parseDouble(LNG_Current)));
+            CameraUpdate zoom= CameraUpdateFactory.zoomTo(18);
+            
+            map.moveCamera(center);
+            map.animateCamera(zoom);
+        
         }
     }
     
@@ -635,11 +868,11 @@ public class CircuitEstimationActivity extends AppCompatActivity implements Goog
         }
     }
     
-    private void updateUI() {
+    private void updateUI()
+    {
         if (mCurrentLocation == null) return;
         
         Log.v(AppConstants.TAG , "LATTTT: " + mCurrentLocation.getLatitude());
-        
         
         /*mBinding.latitudeText.setText(String.format("%s: %f", mLatitudeLabel,
                                                     mCurrentLocation.getLatitude()));
@@ -683,7 +916,6 @@ public class CircuitEstimationActivity extends AppCompatActivity implements Goog
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult)
     {
         Log.i(AppConstants.TAG, "Connection failed: ConnectionResult.getErrorCode() = " + connectionResult.getErrorCode());
-        
     }
     
     @Override
@@ -693,17 +925,21 @@ public class CircuitEstimationActivity extends AppCompatActivity implements Goog
          LNG_Current = location.getLongitude() + "";
     
         if(!isPause)
+        {
             userPathPointsArray.add(new Point(location.getLatitude()+ "" , location.getLongitude() + ""));
-        
-        Log.d(AppConstants.TAG , "LAT: " + location.getLatitude());
-        Log.d(AppConstants.TAG , "LNG: " + location.getLongitude());
-        
-        updatePath(location.getLatitude() , location.getLongitude());
-        
+    
+            Log.d(AppConstants.TAG , "LAT: " + location.getLatitude());
+            Log.d(AppConstants.TAG , "LNG: " + location.getLongitude());
+    
+            updatePath(location.getLatitude() , location.getLongitude());
+        }
+    
+        /*Toast.makeText(CircuitEstimationActivity.this , "Accuracy survey: " + location.getAccuracy(),
+                       Toast.LENGTH_SHORT).show();*/
        // map.clear();
         
-        Toast.makeText(CircuitEstimationActivity.this , "LATT: " + location.getLatitude(),
-                       Toast.LENGTH_SHORT).show();
+        /*Toast.makeText(CircuitEstimationActivity.this , "LATT: " + location.getLatitude(),
+                       Toast.LENGTH_SHORT).show();*/
     }
     
     @Override
@@ -767,6 +1003,12 @@ public class CircuitEstimationActivity extends AppCompatActivity implements Goog
         this.getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     
+        InputMethodManager inputMethodManager =
+                (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.toggleSoftInputFromWindow(
+                dialog.getCurrentFocus().getWindowToken(),
+                InputMethodManager.SHOW_FORCED, 0);
+    
         RelativeLayout btn_done = (RelativeLayout) dialog.findViewById(R.id.btn_done);
         btn_done.setOnClickListener(new View.OnClickListener()
         {
@@ -783,6 +1025,12 @@ public class CircuitEstimationActivity extends AppCompatActivity implements Goog
     
                 Note note = new Note(text , time , lat , lng);
                 notesArray.add(note);
+    
+                View view = dialog.getCurrentFocus();
+                if (view != null) {
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
                 
                 dialog.dismiss();
             }
@@ -804,9 +1052,24 @@ public class CircuitEstimationActivity extends AppCompatActivity implements Goog
             @Override
             public void onClick(View v)
             {
-                JSONObject postParams = getPostParams();
-                Log.v(AppConstants.TAG , "POST PARAMS: " + postParams);
-                SubmitSurvey(postParams);
+                
+                
+                if(AppConstants.isNetworkAvailable(CircuitEstimationActivity.this))
+                {
+                    JSONObject postParams = getPostParams(false);
+                    Log.v(AppConstants.TAG , "POST PARAMS: " + postParams);
+                    SubmitSurvey(postParams);
+                }
+                    
+                else
+                {
+                    Toast.makeText(CircuitEstimationActivity.this , "Network not available!",
+                                   Toast.LENGTH_LONG).show();
+                    
+                   /* JSONObject postParams = getPostParams(true);
+                    Log.v(AppConstants.TAG , "POST PARAMS: " + postParams);
+                    SaveSurveyLocally(postParams);*/
+                }
                 
                 dialog.dismiss();
             }
@@ -903,17 +1166,22 @@ public class CircuitEstimationActivity extends AppCompatActivity implements Goog
        /* else
             mMarker.setPosition(point);*/
     
-        CameraUpdate center=
+      /*  CameraUpdate center=
                 CameraUpdateFactory.newLatLng(point);
         CameraUpdate zoom= CameraUpdateFactory.zoomTo(17);
         map.moveCamera(center);
-        map.animateCamera(zoom);
+        map.animateCamera(zoom);*/
         
         map.addPolyline(optionsGREEN);
     }
     
-    public void drawCircuit(ArrayList<Point> pointsArrayList)
+    public void drawCircuit(ArrayList<Point> pointsArrayList , String type)
     {
+        if(type.equalsIgnoreCase("DELEGATED"))
+            optionsBLACK = new PolylineOptions().width(7).color(Color.BLACK);
+        else
+            optionsBLACK = new PolylineOptions().width(7).color(Color.YELLOW);
+    
         for(int i=0; i< pointsArrayList.size(); i++)
         {
             LatLng latlng = new LatLng(Double.parseDouble(pointsArrayList.get(i).getLAT()) , Double.parseDouble(pointsArrayList.get(i).getLNG()));
@@ -975,20 +1243,27 @@ public class CircuitEstimationActivity extends AppCompatActivity implements Goog
         inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
     }
     
-    public JSONObject getPostParams()
+    public JSONObject getPostParams(boolean isOffline)
     {
         JSONObject obj = new JSONObject();
         JSONObject credentialsObj = new JSONObject();
+    
+        Random generator = new Random();
+        int randMilage = generator.nextInt(10) + 1;
         
         try
         {
-            credentialsObj.put("CircuitId" , Integer.parseInt(CircuitID));
+            if(isOffline)
+                credentialsObj.put("CircuitId" , 0);
+            else
+                credentialsObj.put("CircuitId" , Integer.parseInt(CircuitID));
+                
             credentialsObj.put("UserId" , mPrefs.getString(AppConstants.USER_ID , ""));
             credentialsObj.put("SubmitTime" , AppConstants.getISOCurrentTime());
             credentialsObj.put("StartTime" , startTime);
             credentialsObj.put("EndTime" , AppConstants.getISOCurrentTime());
             credentialsObj.put("SyncTime" , AppConstants.getISOCurrentTime());
-            credentialsObj.put("Milage" , 2);
+            credentialsObj.put("Milage" , randMilage);
             
             JSONArray notesJSONArray = new JSONArray();
             
@@ -1096,10 +1371,11 @@ public class CircuitEstimationActivity extends AppCompatActivity implements Goog
             
                 dialog.dismiss();
                 String json = null;
-            
-                NetworkResponse response = error.networkResponse;
-                Log.e(AppConstants.TAG , "response.statusCode: " + response.statusCode);
-            
+    
+                Toast.makeText(CircuitEstimationActivity.this , "Error ocuured! Please try again",
+                               Toast.LENGTH_LONG).show();
+    
+    
             }
         
         }) {
@@ -1123,6 +1399,64 @@ public class CircuitEstimationActivity extends AppCompatActivity implements Goog
     
         mRequestQueue.add(postRequest);
     }
+   
+    public void ParseCircuitPath()
+    {
+        try
+        {
+            if(!circuitSurveyPathArray.equalsIgnoreCase(""))
+            {
+                JSONArray circuitPath = new JSONArray(circuitSurveyPathArray);
     
+                for(int i=0;i<circuitPath.length(); i++)
+                {
+                    JSONObject surveyPathObj = circuitPath.getJSONObject(i);
+                    JSONObject pathObject = surveyPathObj.getJSONObject("Path");
+        
+                    JSONArray surveyPointsArray = pathObject.getJSONArray("points");
+        
+                    ArrayList<Point> surveyPointsList = new ArrayList<Point>();
+        
+                    for(int j=0; j<surveyPointsArray.length(); j++)
+                    {
+                        JSONObject pointObj = surveyPointsArray.getJSONObject(j);
+                        String LAT = pointObj.opt("x").toString();
+                        String LNG = pointObj.opt("y").toString();
+            
+                        Point point = new Point(LAT ,LNG);
+                        surveyPointsList.add(point);
+                        drawCircuit(surveyPointsList , "SURVERY");
+            
+                        Log.w(AppConstants.TAG , "LAT SUREVY POINT: " + LAT);
+                    }
+        
+                }
+            }
+            
+        }
+        catch (JSONException e)
+        {
+            Log.e(AppConstants.TAG , "JSONException ParseCircuitPath: " + e.toString());
+        }
+    }
+    
+    public void SaveSurveyLocally(JSONObject postParams)
+    {
+        Log.i(AppConstants.TAG , "SaveSurveyLocally circuitIDD: " + CircuitID);
+        
+        if(CircuitID.equalsIgnoreCase(""))
+            mDB.addSurveyEntry(mPrefs.getString(AppConstants.USER_ID , "") , mPrefs.getString(AppConstants.BID_PLAN_ID , "") , CircuitID , postParams.toString());
+        else
+            mDB.addSurveyEntry(mPrefs.getString(AppConstants.USER_ID , "") , mPrefs.getString(AppConstants.BID_PLAN_ID , "") , CircuitID , postParams.toString());
+        
+        finish();
+    }
+    
+    @Override
+    public void onBackPressed()
+    {
+        
+        // super.onBackPressed(); // Comment this super call to avoid calling finish() or fragmentmanager's backstack pop operation.
+    }
     
 }

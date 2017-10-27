@@ -28,13 +28,16 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Random;
 
+import asplundh.sps.com.asplundhproductivity.Helper.DBController;
 import asplundh.sps.com.asplundhproductivity.Model.CircuitType;
 import asplundh.sps.com.asplundhproductivity.R;
 import asplundh.sps.com.asplundhproductivity.Singleton.MySingleton;
@@ -50,6 +53,7 @@ public class CreateNewCircuitActivity extends AppCompatActivity implements View.
     int lineTypeID = 0;
     LinearLayout lay_main;
     ArrayList<CircuitType> CircuitTypesList = new ArrayList<CircuitType>();
+    DBController mDB;
     
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -57,17 +61,39 @@ public class CreateNewCircuitActivity extends AppCompatActivity implements View.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_circuit);
         setupUI(findViewById(R.id.create_new_circuit));
+        mDB = new DBController(getApplicationContext());
     
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                              WindowManager.LayoutParams.FLAG_FULLSCREEN);
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        BIDPLANID = mPrefs.getString(AppConstants.BID_PLAN_ID , "");
+        Log.i(AppConstants.TAG , "BIDPLANID: " + BIDPLANID);
     
         lay_main = (LinearLayout) findViewById(R.id.lay_main);
         
-         BIDPLANID = getIntent().getStringExtra("BIDPLANID");
+     //   CircuitTypesList = (ArrayList<CircuitType>) getIntent().getSerializableExtra("CIRCUITTYPES");
+        
+        String circuit_types = mPrefs.getString(AppConstants.CIRCUIT_TYPES , "");
+        try
+        {
+            JSONArray circuitTypesArray = new JSONArray(circuit_types);
     
-        CircuitTypesList = (ArrayList<CircuitType>) getIntent().getSerializableExtra("CIRCUITTYPES");
-    
+            for(int i=0; i<circuitTypesArray.length(); i++)
+            {
+                JSONObject object = circuitTypesArray.getJSONObject(i);
+                String circuitTypeID =  object.opt("Id").toString();
+                String circuitTypeTitle =  object.opt("Title").toString();
+        
+                CircuitType circuitType = new CircuitType(circuitTypeID , circuitTypeTitle);
+                CircuitTypesList.add(circuitType);
+            }
+        }
+        catch (JSONException e)
+        {
+            Log.e(AppConstants.TAG , "JSONException converting circuit types: " + e.toString());
+        }
+        
+        
         et_circuit_title = (EditText) findViewById(R.id.et_circuit_title);
         typeGroup = (RadioGroup) findViewById(R.id.radioType);
         btn_create = (RelativeLayout) findViewById(R.id.btn_create);
@@ -90,7 +116,11 @@ public class CreateNewCircuitActivity extends AppCompatActivity implements View.
             case R.id.btn_create:
                 JSONObject postParams = getPostParams();
                 Log.v(AppConstants.TAG , "POST PARAMS: " + postParams);
-                CreateCircuit(postParams);
+                
+                if(AppConstants.isNetworkAvailable(CreateNewCircuitActivity.this))
+                    CreateCircuit(postParams);
+                else
+                    CreateCircuitOffline(postParams);
                 break;
     
             case R.id.back_ic:
@@ -115,8 +145,8 @@ public class CreateNewCircuitActivity extends AppCompatActivity implements View.
         
         try
         {
-            credentialsObj.put("LoginUserId" , mPrefs.getString(AppConstants.USER_ID , ""));
-            credentialsObj.put("bidPlanId" , BIDPLANID);
+            credentialsObj.put("LoginUserId" , Integer.parseInt(mPrefs.getString(AppConstants.USER_ID , "")));
+            credentialsObj.put("BidPlanId" , Integer.parseInt(BIDPLANID));
             credentialsObj.put("Title" , et_circuit_title.getText().toString());
             credentialsObj.put("LineTypeId" , lineTypeID);
             credentialsObj.put("Milage" , "");
@@ -159,6 +189,10 @@ public class CreateNewCircuitActivity extends AppCompatActivity implements View.
                                                                   
                                                                   Toast.makeText(CreateNewCircuitActivity.this , message,
                                                                                      Toast.LENGTH_LONG).show();
+    
+                                                                  Intent intent = new Intent(CreateNewCircuitActivity.this, CircuitsActivity.class);
+                                                                  intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                                  startActivity(intent);
                                                                   finish();
                                                                   
                                                               }
@@ -286,5 +320,21 @@ public class CreateNewCircuitActivity extends AppCompatActivity implements View.
                 Questions();
             }
         });*/
+    }
+    
+    public void GetLocalDB(LatLng loc)
+    {
+        String locationString = loc.longitude + " " + loc.longitude;
+        Log.v(AppConstants.TAG , "locationString: " + locationString);
+    }
+    
+    public void CreateCircuitOffline(JSONObject postParams)
+    {
+        Random generator = new Random();
+        int randCircuitID = generator.nextInt(20000) + 1;
+        Log.i(AppConstants.TAG , "randCircuitID: " + randCircuitID);
+        
+        mDB.addNewCircuitEntry(mPrefs.getString(AppConstants.USER_ID , "") , BIDPLANID , randCircuitID +"" , postParams.toString());
+        finish();
     }
 }

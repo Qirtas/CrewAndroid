@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/margin"
+        android:layout_width="match_parent"
+        android:layout_height="12dp"
+        ></RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginRight="7dp"
+        android:layout_marginLeft="7dp"
+        android:background="@color/grey"
+        android:layout_below="@+id/margin"
+        >
+
+        <ImageView
+            android:id="@+id/iv_is_delegated"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:background="@drawable/person_ic"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="18dp"
+            />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RECEIPIRdfsdfsd555555555555555555"
+            android:textColor="@color/blue_dark"
+            android:textSize="24sp"
+            android:lines="1"
+            android:ems="9"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textStyle="bold"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@+id/iv_is_delegated"
+            />
+
+        <ImageView
+            android:id="@+id/iv_Arrow"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="9dp"
+            android:background="@drawable/arrow_double"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

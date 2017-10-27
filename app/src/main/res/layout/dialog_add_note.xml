@@ -42,7 +42,8 @@
             android:layout_marginLeft="17dp"
             android:hint="Enter Text Here..."
             android:background="@android:color/transparent"
-            android:textColor="@color/grey"
+            android:textColor="@color/blue_dark"
+            android:textColorHint="@color/grey"
             android:textStyle="bold"
             android:textSize="22sp"
             />

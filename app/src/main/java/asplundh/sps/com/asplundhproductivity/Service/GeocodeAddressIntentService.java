@@ -2,8 +2,6 @@ package asplundh.sps.com.asplundhproductivity.Service;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.support.annotation.Nullable;
@@ -22,8 +20,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import asplundh.sps.com.asplundhproductivity.Singleton.MySingleton;
@@ -46,124 +42,70 @@ public class GeocodeAddressIntentService extends IntentService
     @Override
     protected void onHandleIntent(@Nullable Intent intent)
     {
-        double latitude = intent.getDoubleExtra(AppConstants.LOCATION_LATITUDE_DATA_EXTRA, 0);
-        double longitude = intent.getDoubleExtra(AppConstants.LOCATION_LONGITUDE_DATA_EXTRA, 0);
-        int Index = intent.getIntExtra("INDEX", -1);
-        String IOTF_DEVID = intent.getStringExtra("IOTF_DEVID");
-    
-        getGeocodeUpdated(latitude, longitude, Index, IOTF_DEVID);
-    
-        Locale locale = new Locale("en", "us");
-        Geocoder geocoder = new Geocoder(this, Locale.US);
-        String errorMessage = "";
-        List<Address> addresses = null;
-    
-        int fetchType = intent.getIntExtra(AppConstants.FETCH_TYPE_EXTRA, 0);
-        //   Log.e(AppConstants.TAG, "fetchType == " + fetchType);
-
-           /* double latitude = intent.getDoubleExtra(Constants.LOCATION_LATITUDE_DATA_EXTRA, 0);
-            double longitude = intent.getDoubleExtra(Constants.LOCATION_LONGITUDE_DATA_EXTRA, 0);
-            int Index = intent.getIntExtra("INDEX", -1);
-            String IOTF_DEVID = intent.getStringExtra("IOTF_DEVID");*/
-
-          /*  try {
-                addresses = geocoder.getFromLocation(latitude, longitude, 1);
-            } catch (IOException ioException) {
-                errorMessage = "Service Not Available";
-                Log.e(TAG, errorMessage, ioException);
-            } catch (IllegalArgumentException illegalArgumentException) {
-                errorMessage = "Invalid Latitude or Longitude Used";
-                Log.e(TAG, errorMessage + ". " +
-                        "Latitude = " + latitude + ", Longitude = " +
-                        longitude, illegalArgumentException);
-            }*/
-    
+        String City_name = intent.getStringExtra(AppConstants.CITY_NAME);
+        getGeocodeUpdated(City_name);
+        
         resultReceiver = intent.getParcelableExtra(AppConstants.RECEIVER);
-      /*  if (addresses == null || addresses.size()  == 0) {
-            if (errorMessage.isEmpty()) {
-                errorMessage = "Not Found";
-                Log.e(AppConstants.TAG, errorMessage);
-            }
-            deliverResultToReceiver(Constants.FAILURE_RESULT, errorMessage, null, Index, IOTF_DEVID);
-        } else {
-            for(Address address : addresses) {
-                String outputAddress = "";
-                for(int i = 0; i < address.getMaxAddressLineIndex(); i++) {
-                    outputAddress += " --- " + address.getAddressLine(i);
-                }
-            //    Log.e(AppConstants.TAG, outputAddress);
-            }
-            Address address = addresses.get(0);
-            ArrayList<String> addressFragments = new ArrayList<>();
-
-            for(int i = 0; i < address.getMaxAddressLineIndex(); i++)
-            {
-                addressFragments.add(address.getAddressLine(i));
-            }
-            Log.i(AppConstants.TAG, "Address Found: " + address);
-
-            deliverResultToReceiver(Constants.SUCCESS_RESULT,
-                                    TextUtils.join(System.getProperty("line.separator"),
-                                                   addressFragments), address, Index, IOTF_DEVID);
-        }*/
     }
     
-    
-    public  void getGeocodeUpdated(double lat, double lng, final int index, final String iotf)
+    public void getGeocodeUpdated(String cityName)
     {
         // Log.v(AppConstants.TAG, "URL " + "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + lng + "&key=AIzaSyB1kTYkURwfYKN8hgUQh2OodkYGfPdrlMg");
         String address = "";
         //AIzaSyCsjHNjJnWvCLxQMYlq9BnIQCy5MO8bIXY
         
+        Log.v(AppConstants.TAG , "getGeocodeUpdated: " + cityName);
+        
         final RequestQueue mRequestQueue;
         mRequestQueue = MySingleton.getInstance(this).getRequestQueue();
         StringRequest postRequest = new StringRequest(Request.Method.POST,
-                                                      "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +lat + "," + lng + "&key=AIzaSyCsjHNjJnWvCLxQMYlq9BnIQCy5MO8bIXY"
+                                                      "https://maps.googleapis.com/maps/api/geocode/json?address=" + cityName +"&key=AIzaSyCsjHNjJnWvCLxQMYlq9BnIQCy5MO8bIXY"
                 ,
                                                       new Response.Listener<String>()
                                                       {
-                    
-                    
                                                           @Override
                                                           public void onResponse(String response)
                                                           {
                         
-                                                             // Log.w(AppConstants.TAG , "************************** geocode updated ressponse: " + response);
+                                                              Log.w(AppConstants.TAG , "************************** geocode updated ressponse: " + response);
                         
                                                               try
                                                               {
                                                                   JSONObject jsonObj = new JSONObject(response);
                             
-                                                                  String status = jsonObj.opt("status").toString();
-                                                                 //  Log.i(AppConstants.TAG , "status: "+ status);
+                                                                  JSONArray result = jsonObj.getJSONArray("results");
+                                                                  JSONObject resultObj = result.getJSONObject(0);
                             
-                                                                  if(status.equalsIgnoreCase("OK"))
-                                                                  {
-                                                                      JSONArray resultsData = jsonObj.getJSONArray("results");
-                                                                      JSONObject obj = resultsData.getJSONObject(0);
-                                                                      String formatted_add = obj.opt("formatted_address").toString();
-                                
-                                                                      // Log.d("WatchOver" , "formatted_add: "+ formatted_add);
-                                
-                                                                      deliverResultToReceiverUpdated(AppConstants.SUCCESS_RESULT, formatted_add);
-                                                                  }
-                                                                  else
-                                                                  {
-                                                                      deliverResultToReceiverUpdated(AppConstants.SUCCESS_RESULT, "Unknown Location");
-                                                                  }
+                                                                  JSONObject geometry = resultObj.getJSONObject("geometry");
+                                                                  JSONObject bounds = geometry.getJSONObject("bounds");
+                                                                  JSONObject location = geometry.getJSONObject("location");
+    
+    
+                                                                  JSONObject northEast =  bounds.getJSONObject("northeast");
+                                                                  JSONObject southWest =  bounds.getJSONObject("southwest");
                             
+                                                                  Log.d(AppConstants.TAG , "northEast: " + northEast);
+                                                                  Log.d(AppConstants.TAG , "southWest: " + southWest);
+    
+                                                                  deliverResultToReceiverUpdated(AppConstants.SUCCESS_RESULT, northEast.toString() , southWest.toString() ,location.toString() );
+    
+    
                                                               }
                                                               catch (JSONException e)
                                                               {
-                                                                  Log.e(AppConstants.TAG , "exception: " + e.toString());
+                                                                  Log.e("WatchOver" , "exception: "+ e.toString());
                                                               }
-                                                              
+                        
                                                           }
                                                       }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error)
             {
-               // deliverResultToReceiverUpdated(Constants.SUCCESS_RESULT, "Unknown Location", index, iotf);
+                //deliverResultToReceiverUpdated(Constants.SUCCESS_RESULT, "Unknown Location", index, iotf);
+    
+                deliverResultToReceiverUpdated(AppConstants.SUCCESS_RESULT, "Not found", "Not found" , "Not found");
+                
+                Log.e(AppConstants.TAG , "onErrorResponse geocoder: " + error.toString());
                 
             }
             
@@ -191,10 +133,12 @@ public class GeocodeAddressIntentService extends IntentService
         
     }
     
-    private void deliverResultToReceiverUpdated(int resultCode,  String address)
+    private void deliverResultToReceiverUpdated(int resultCode,  String northEast , String southWest, String location)
     {
         Bundle bundle = new Bundle();
-        bundle.putString(AppConstants.RESULT_ADDRESS, address);
+        bundle.putString(AppConstants.NORTH_EAST, northEast);
+        bundle.putString(AppConstants.SOUTH_WEST, southWest);
+        bundle.putString(AppConstants.CITY_LOCATION, location);
         resultReceiver.send(resultCode, bundle);
     }
 }

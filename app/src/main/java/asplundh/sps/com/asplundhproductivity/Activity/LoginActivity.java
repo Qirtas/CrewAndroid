@@ -1,11 +1,15 @@
 package asplundh.sps.com.asplundhproductivity.Activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
@@ -18,10 +22,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -35,6 +39,7 @@ import org.json.JSONObject;
 
 import asplundh.sps.com.asplundhproductivity.Helper.DBController;
 import asplundh.sps.com.asplundhproductivity.R;
+import asplundh.sps.com.asplundhproductivity.Service.GeocodeAddressIntentService;
 import asplundh.sps.com.asplundhproductivity.Singleton.MySingleton;
 import asplundh.sps.com.asplundhproductivity.Utils.AppConstants;
 
@@ -46,6 +51,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     ImageView togglePin;
     DBController mDB;
     SharedPreferences mPrefs;
+    BoundsResultReceiver mResultReceiver;
+    TextView tv_see_more;
     
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -55,12 +62,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                              WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    
+        mResultReceiver = new BoundsResultReceiver(null);
+    
+       // AppConstants.reverseGeocoding(LoginActivity.this , "Islamabad");
+       // getCityBounds("Karachi");
         
         AppConstants.getISOCurrentTime();
     
         setupUI(findViewById(R.id.activity_login));
         mDB = new DBController(getApplicationContext());
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+    
+       // mDB.addBidPlanEntry("111" , "1"  ,"aaa" , "jdh" , "sdfndk" , "sdfjk" ,"j" , "sdfjh" , "000");
         
         et_username = (EditText) findViewById(R.id.et_username);
         et_pin = (EditText) findViewById(R.id.et_pin);
@@ -75,7 +89,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if(type == 18){
                     // if(et_password.getText().length() > 0) {
 //                        et_password.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                    et_pin.setInputType(InputType.TYPE_CLASS_NUMBER);
+                    et_pin.setInputType(InputType.TYPE_CLASS_TEXT);
                     et_pin.setTypeface(tf, Typeface.BOLD);
                     togglePin.setImageDrawable(getResources().getDrawable(R.drawable.eye_slash));
                 
@@ -90,13 +104,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             
             }
         });
-    
-    
+        
         RelativeLayout scan_barcode = (RelativeLayout) findViewById(R.id.scan_barcode);
         scan_barcode.setOnClickListener(this);
     
         RelativeLayout btn_login = (RelativeLayout) findViewById(R.id.btn_login);
         btn_login.setOnClickListener(this);
+    }
+    
+    public void getCityBounds(String cityName)
+    {
+        Intent intent = new Intent(this, GeocodeAddressIntentService.class);
+        intent.putExtra(AppConstants.RECEIVER, mResultReceiver);
+        intent.putExtra(AppConstants.CITY_NAME , cityName);
+        startService(intent);
     }
     
     public void setupUI(View view) {
@@ -112,7 +133,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     or_layout.setVisibility(View.VISIBLE);
                     scan_barcode.setVisibility(View.VISIBLE);
                     top_ic_layout_openkey.setVisibility(View.GONE);*/
-                    
                     
                     hideSoftKeyboard(LoginActivity.this);
                     
@@ -150,10 +170,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.btn_login:
                /* if(validateForm())
                 {*/
-                    JSONObject postParams = getLoginPostParams();
-                    Log.v(AppConstants.TAG , "POST PARAMS: " + postParams);
-                    LoginRequest(postParams , et_username.getText().toString() , "PIN");
-             //   }
+                    if(AppConstants.isNetworkAvailable(LoginActivity.this))
+                    {
+                        JSONObject postParams = getLoginPostParams();
+                        Log.v(AppConstants.TAG , "POST PARAMS: " + postParams);
+                        LoginRequest(postParams , et_username.getText().toString() , "PIN");
+                    }
+                    else
+                    {
+                        Toast.makeText(LoginActivity.this , "Network not available!",
+                                       Toast.LENGTH_LONG).show();
+                      //  doOfflineLogin();
+                    }
+              //  }
                 
                 break;
     
@@ -246,9 +275,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     
                 dialog.dismiss();
                 String json = null;
+                Toast.makeText(LoginActivity.this , "Error ocuured! Please try again",
+                               Toast.LENGTH_LONG).show();
                 
-                NetworkResponse response = error.networkResponse;
-                Log.e(AppConstants.TAG , "response.statusCode: " + response.statusCode);
                 
             }
             
@@ -273,7 +302,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         
         mRequestQueue.add(postRequest);
     }
-    
     
     public JSONObject getLoginPostParams()
     {
@@ -327,4 +355,121 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         return valid;
         
     }
+    
+    public void doOfflineLogin()
+    {
+        boolean isDataFound = false;
+    
+        String emp_id = et_username.getText().toString();
+        String emp_pin = et_pin.getText().toString();
+    
+        Cursor cursor = mDB.getAllData(mDB.DB_TABLE_LOGINS);
+        Log.i(AppConstants.TAG , "cursor size: " + cursor.getColumnCount());
+    
+        if (cursor.moveToFirst())
+        {
+            do
+            {
+                String empdb_id = cursor.getString(cursor.getColumnIndex(DBController.KEY_EMPNAME));
+                Log.v(AppConstants.TAG , "empdb_id: " + empdb_id);
+        
+                if(empdb_id.equalsIgnoreCase(emp_id))
+                {
+                    Log.i(AppConstants.TAG , "IDS MATCHED");
+            
+                    String empdb_pin = cursor.getString(cursor.getColumnIndex(DBController.KEY_EMPPIN));
+                    String emp_name = cursor.getString(cursor.getColumnIndex(DBController.KEY_EMPNAME));
+            
+                    if(empdb_pin.equalsIgnoreCase(emp_pin))
+                    {
+                        isDataFound = true;
+                        boolean isForePerson = false;
+                        
+                        mPrefs.edit().putString(AppConstants.EMP_NAME , emp_name).commit();
+                        mPrefs.edit().putString(AppConstants.EMP_ID , empdb_id).commit();
+                        mPrefs.edit().putString(AppConstants.EMP_PIN , empdb_pin).commit();
+                        
+                        Log.d(AppConstants.TAG , "DO LOGIN");
+                        Intent i = new Intent(LoginActivity.this , BidPlanActivity.class);
+                        startActivity(i);
+                
+                    }
+                    else
+                    {
+                        Log.e(AppConstants.TAG , "PIN IS WRONG");
+                    }
+            
+                    Log.w(AppConstants.TAG , "//////////////////////");
+                    Log.v(AppConstants.TAG , "empdb_id: " + empdb_id);
+                    Log.v(AppConstants.TAG , "empname: " + emp_name);
+                    Log.v(AppConstants.TAG , "empdb_pin: " + empdb_pin);
+                    
+                }
+                else
+                {
+                    //Log.e(AppConstants.TAG , "No record found with enterd ID");
+            
+                }
+        
+                // do what ever you want here
+            }while(cursor.moveToNext());
+    
+            cursor.close();
+        }
+    }
+    
+    
+    @SuppressLint("ParcelCreator")
+    class BoundsResultReceiver extends ResultReceiver
+    {
+        public BoundsResultReceiver(Handler handler)
+        {
+            super(handler);
+        }
+        
+        @Override
+        protected void onReceiveResult(int resultCode, final Bundle resultData)
+        {
+            if (resultCode == AppConstants.SUCCESS_RESULT)
+            {
+                runOnUiThread(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        
+                        String northEastBounds = resultData.getString(AppConstants.NORTH_EAST);
+                        String southWestBounds = resultData.getString(AppConstants.SOUTH_WEST);
+                        String cityLocation = resultData.getString(AppConstants.CITY_LOCATION);
+    
+    
+                        Log.i(AppConstants.TAG , "Bounds in BoundsResultReceiver: " + northEastBounds +  "  " + southWestBounds);
+                        Log.i(AppConstants.TAG , "City loc in BoundsResultReceiver: " + cityLocation);
+    
+    
+                        Intent i = new Intent(LoginActivity.this , MapDownloadActivity.class);
+                        i.putExtra(AppConstants.NORTH_EAST , northEastBounds);
+                        i.putExtra(AppConstants.SOUTH_WEST , southWestBounds);
+                        i.putExtra(AppConstants.CITY_LOCATION , cityLocation);
+                        startActivity(i);
+                        
+                    }
+                });
+            }
+            else
+            {
+                runOnUiThread(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        Log.v(AppConstants.TAG, " " + resultData.getString(AppConstants.RESULT_DATA_KEY));
+                    }
+                });
+            }
+        }
+    }
+    
+    ///////////////////////////////////////////
+   
 }

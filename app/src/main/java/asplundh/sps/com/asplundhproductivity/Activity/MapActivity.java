@@ -2,7 +2,6 @@ package asplundh.sps.com.asplundhproductivity.Activity;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -24,12 +23,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -56,11 +49,9 @@ import java.text.DateFormat;
 import java.util.Date;
 
 import asplundh.sps.com.asplundhproductivity.R;
-import asplundh.sps.com.asplundhproductivity.Singleton.MySingleton;
 import asplundh.sps.com.asplundhproductivity.Utils.AppConstants;
 
 import static asplundh.sps.com.asplundhproductivity.Activity.LocationActivity.isPlayServicesAvailable;
-import static asplundh.sps.com.asplundhproductivity.Utils.AppConstants.BASE_URL;
 
 public class MapActivity extends AppCompatActivity implements View.OnClickListener,GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
@@ -172,10 +163,20 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
             
                 //  updateMarker(mCurrentLocation.getLatitude() , mCurrentLocation.getLongitude());
               //  mapboxMap.addPolyline(options);
+    
+                map.setOnMapClickListener(new MapboxMap.OnMapClickListener()
+                {
+                    @Override
+                    public void onMapClick(@NonNull LatLng point)
+                    {
+                        Log.v(AppConstants.TAG , "onMapClick: " + point.getLatitude());
+                    }
+                });
             
             }
         });
     
+        
         ImageView back_ic = (ImageView) findViewById(R.id.back_ic);
         back_ic.setOnClickListener(this);
         ImageView logout_ic = (ImageView) findViewById(R.id.logout_ic);

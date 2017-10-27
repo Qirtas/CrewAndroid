@@ -10,7 +10,7 @@
     xmlns:mapbox="http://schemas.android.com/apk/res-auto"
     tools:context="asplundh.sps.com.asplundhproductivity.Activity.CircuitEstimationActivity">
     <TextView
-        android:id="@+id/tv_bid_plan"
+        android:id="@+id/tv_circuit_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Spruce170J"
@@ -51,9 +51,10 @@
 
                 //Bid plan unit
                 <TextView
+                    android:id="@+id/tv_bid_plan_unit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Bid plan unit: Trees"
+                    android:text="Bid plan unit: Spans"
                     android:textStyle="bold"
                     android:textColor="@color/blue_dark"
                     android:textSize="13sp"
@@ -73,6 +74,7 @@
                     android:layout_marginRight="12dp"
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="15dp"
+                     android:visibility="gone"
                     />
 
         <RelativeLayout
@@ -105,6 +107,21 @@
                 android:layout_marginLeft="7dp"
                 android:layout_marginBottom="5dp"
                 />
+
+            <RelativeLayout
+                android:id="@+id/loc_cuurent_ic"
+                android:layout_width="60dp"
+                android:layout_height="80dp"
+                android:layout_alignParentRight="true"
+                android:layout_above="@+id/pausefinishbtns"
+                >
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/loc_current_ic"
+                    android:layout_centerInParent="true"
+                    />
+            </RelativeLayout>
                 
             //PUASE FINISH BUUTONS
             
@@ -132,6 +149,7 @@
                         android:layout_centerInParent="true"
                         >
                         <ImageView
+                            android:id="@+id/iv_pause_resume"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:background="@drawable/pause_iconn"
@@ -190,7 +208,7 @@
         //COUNTERS
 
         //BOTTOM ROW
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/lay_bottom_row"
             android:layout_width="match_parent"
             android:layout_height="90dp"
@@ -198,6 +216,14 @@
             android:layout_marginLeft="7dp"
             android:layout_marginRight="7dp"
             >
+
+            //EXTRA BTN BOTTOM ROW
+            <RelativeLayout
+                android:id="@+id/bottom_row_extra_btn"
+                android:layout_width="56dp"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                ></RelativeLayout>
 
             //FOUR
             <LinearLayout
@@ -249,6 +275,7 @@
                 android:gravity="center_horizontal"
                 android:layout_centerHorizontal="true"
                 android:layout_marginLeft="16dp"
+                android:layout_marginRight="7dp"
                 android:orientation="vertical"
                 >
                 <EditText
@@ -291,6 +318,7 @@
                 android:gravity="center_horizontal"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="7dp"
+                android:layout_marginLeft="10dp"
                 android:orientation="vertical"
                 >
                 <EditText
@@ -323,10 +351,10 @@
                     />
             </LinearLayout>
 
-        </RelativeLayout>
+        </LinearLayout>
 
         //TOP ROW
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/lay_top_row"
             android:layout_width="match_parent"
             android:layout_height="90dp"
@@ -335,6 +363,15 @@
             android:layout_marginLeft="7dp"
             android:layout_marginRight="7dp"
             >
+
+            //EXTRA BTN TOP ROW
+            <RelativeLayout
+                android:id="@+id/tope_row_extra_btn"
+                android:layout_width="56dp"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                ></RelativeLayout>
+
             //ONE
             <LinearLayout
                 android:id="@+id/btn_one"
@@ -387,7 +424,6 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="12dp"
                 android:orientation="vertical"
-                android:layout_toRightOf="@+id/btn_one"
                 >
                 <EditText
                     android:id="@+id/et_counter_two"
@@ -428,6 +464,7 @@
                 android:layout_gravity="center_horizontal"
                 android:gravity="center_horizontal"
                 android:layout_marginRight="7dp"
+                android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/btn_two"
                 android:orientation="vertical"
                 >
@@ -461,7 +498,7 @@
                     />
             </LinearLayout>
 
-        </RelativeLayout>
+        </LinearLayout>
 
 
     </RelativeLayout>

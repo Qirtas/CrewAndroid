@@ -10,11 +10,11 @@ import asplundh.sps.com.asplundhproductivity.Model.SubUnit;
 
 public class ChildModel
 {
-    private String versionNumber , unit , customerName , city , country , location_description;
+    private String versionNumber , unit , customerName , city , country , location_description , subUnit_json;
     private boolean mIsVegetarian;
     ArrayList<SubUnit> subunitsList = new ArrayList<>();
     
-    public ChildModel(String versionNumber , String unit , String customerName , String city , String country, ArrayList<SubUnit> subunits ,boolean isVegetarian , String location_description)
+    public ChildModel(String versionNumber , String unit , String customerName , String city , String country, ArrayList<SubUnit> subunits ,boolean isVegetarian , String location_description , String subUnitJSon)
     {
         this.versionNumber = versionNumber;
         this.unit = unit;
@@ -24,6 +24,17 @@ public class ChildModel
         this.subunitsList = subunits;
         mIsVegetarian = isVegetarian;
         this.location_description = location_description;
+        this.subUnit_json = subUnitJSon;
+    }
+    
+    public String getSubUnit_json()
+    {
+        return subUnit_json;
+    }
+    
+    public void setSubUnit_json(String subUnit_json)
+    {
+        this.subUnit_json = subUnit_json;
     }
     
     public String getLocation_description()

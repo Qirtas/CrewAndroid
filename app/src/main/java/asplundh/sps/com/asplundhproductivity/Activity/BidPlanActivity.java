@@ -1,8 +1,12 @@
 package asplundh.sps.com.asplundhproductivity.Activity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.UiThread;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,6 +36,7 @@ import java.util.List;
 import asplundh.sps.com.asplundhproductivity.Expandable.ChildModel;
 import asplundh.sps.com.asplundhproductivity.Expandable.ParentModel;
 import asplundh.sps.com.asplundhproductivity.Expandable.RecipeAdapter;
+import asplundh.sps.com.asplundhproductivity.Helper.DBController;
 import asplundh.sps.com.asplundhproductivity.Model.BitPlan;
 import asplundh.sps.com.asplundhproductivity.Model.SubUnit;
 import asplundh.sps.com.asplundhproductivity.R;
@@ -48,6 +53,8 @@ public class BidPlanActivity extends AppCompatActivity implements View.OnClickLi
     public static String bidPlansJson = "";
     
     ArrayList<ParentModel> parentList = new ArrayList<>();
+    DBController mDB;
+    SharedPreferences mPrefs;
     
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -57,6 +64,9 @@ public class BidPlanActivity extends AppCompatActivity implements View.OnClickLi
     
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                              WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    
+        mDB = new DBController(getApplicationContext());
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
     
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         
@@ -96,7 +106,14 @@ public class BidPlanActivity extends AppCompatActivity implements View.OnClickLi
     
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        getBidPlans();
+        
+        /*if(AppConstants.isNetworkAvailable(BidPlanActivity.this))
+        {
+            getBidPlans();
+        }
+        else
+            getBidPlansLocally();*/
+        
         //prepareData();
     }
     
@@ -126,17 +143,27 @@ public class BidPlanActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
     
+    String KEY_BIDPLANID_SYNCED = "";
+    
     private void getBidPlans()
     {
         final ProgressDialog dialog = ProgressDialog.show(this, "Processing",
                                                           getResources().getString(R.string.getting_data), true);
+        
+        Cursor cursor = mDB.getAllData(DBController.DB_TABLE_BIDPLANS);
+        
+        if(cursor.moveToFirst())
+        {
+            KEY_BIDPLANID_SYNCED = cursor.getString(cursor.getColumnIndex(mDB.KEY_BIDPLANID));
+            Log.d(AppConstants.TAG , "KEY_BIDPLANID_SYNCED: " + KEY_BIDPLANID_SYNCED);
+        }
         
         Log.i(AppConstants.TAG , "getBidPlans URL: " + BASE_URL + "getAllBidPlansByUser?id=1");
     
         RequestQueue mRequestQueue;
         mRequestQueue = MySingleton.getInstance(this).getRequestQueue();
         StringRequest postRequest = new StringRequest(Request.Method.GET,
-                                                      BASE_URL + "getAllBidPlansByUser?id=1"
+                                                      BASE_URL + "getAllBidPlansByUser?id=" +mPrefs.getString(AppConstants.USER_ID , "")
             
                 ,
                                                       new Response.Listener<String>() {
@@ -145,6 +172,7 @@ public class BidPlanActivity extends AppCompatActivity implements View.OnClickLi
                     
                                                               Log.d(AppConstants.TAG , "getBidPlans ressponse: " + response);
                                                               bidPlansJson = response;
+                                                              AppConstants.BIDPLANS_JSONARRAY = response;
     
                                                               try
                                                               {
@@ -160,10 +188,14 @@ public class BidPlanActivity extends AppCompatActivity implements View.OnClickLi
                                                                   }
                                                                   else
                                                                   {
+                                                                    //  mDB.clearTable(DBController.DB_TABLE_BIDPLANS_JSON);
                                                                       JSONArray array = jsonObj.getJSONArray("result");
+    
+                                                                   //   mDB.addBidPlanJSON(mPrefs.getString(AppConstants.USER_ID , "") , array.toString());
                                                                       
                                                                       for(int i=0; i<array.length(); i++)
                                                                       {
+                                                                          boolean isSynced = false;
                                                                           JSONObject obj = array.getJSONObject(i);
                                                                           String id = obj.opt("Id").toString();
                                                                           String CustomerBidId = obj.opt("CustomerBidId").toString();
@@ -175,26 +207,43 @@ public class BidPlanActivity extends AppCompatActivity implements View.OnClickLi
                                                                           String LocationDescription = obj.opt("LocationDescription").toString();
                                                                           String CustomerName = obj.opt("CustomerName").toString();
                                                                           String Metric = obj.opt("Metric").toString();
+    
+                                                                          if(id.equalsIgnoreCase(KEY_BIDPLANID_SYNCED))
+                                                                              isSynced = true;
+                                                                          else
+                                                                              isSynced = false;
                                                                           
-                                                                          JSONArray subUnits = obj.getJSONArray("SubUnits");
+                                                                          JSONArray subUnits = obj.optJSONArray("SubUnits");
+                                                                          
                                                                           ArrayList<SubUnit> subunits_list = new ArrayList<>();
                                                                           
-                                                                          for(int j=0; j<subUnits.length(); j++)
+                                                                          try
                                                                           {
-                                                                              JSONObject subunit = subUnits.getJSONObject(j);
-                                                                              String Id_subunit = subunit.opt("Id").toString();
-                                                                              String Title_subunit = subunit.opt("Title").toString();
+                                                                              for(int j=0; j<subUnits.length(); j++)
+                                                                              {
+                                                                                  JSONObject subunit = subUnits.getJSONObject(j);
+                                                                                  String Id_subunit = subunit.opt("Id").toString();
+                                                                                  String Title_subunit = subunit.opt("Title").toString();
+        
+                                                                                  SubUnit subUnit = new SubUnit(Id_subunit , Title_subunit , id);
+                                                                                  subunits_list.add(subUnit);
+        
+                                                                                  Log.v(AppConstants.TAG , "subunit: " + subunit);
     
-                                                                              SubUnit subUnit = new SubUnit(Id_subunit , Title_subunit , id);
-                                                                              subunits_list.add(subUnit);
+                                                                                 // mDB.addBidPlanEntry(mPrefs.getString(AppConstants.USER_ID , "") , id  ,Title , Metric , subUnits.toString() , CustomerName , City+","+Country , LocationDescription , VersionNumber);
     
-                                                                              Log.v(AppConstants.TAG , "subunit: " + subunit);
+                                                                              }
                                                                           }
-    
+                                                                          catch (NullPointerException e)
+                                                                          {
+                                                                              Log.e(AppConstants.TAG , "NullPointerException in getting SubuNits");
+                                                                          }
+                                                                          
                                                                           //VERSIONS
                                                                           JSONArray Versions = obj.getJSONArray("Versions");
                                                                           for(int k=0; k<Versions.length(); k++)
                                                                           {
+                                                                              boolean isSynced_version = false;
                                                                               JSONObject version = Versions.getJSONObject(k);
                                                                               String id_version = version.opt("Id").toString();
                                                                               String Title_version = version.opt("Title").toString();
@@ -207,8 +256,13 @@ public class BidPlanActivity extends AppCompatActivity implements View.OnClickLi
                                                                               String CustomerName_version = version.opt("CustomerName").toString();
                                                                               String Metric_version = version.opt("Metric").toString();
     
-                                                                              JSONArray subUnits_version = version.getJSONArray("SubUnits");
+                                                                              JSONArray subUnits_version = version.optJSONArray("SubUnits");
                                                                               ArrayList<SubUnit> subunits_list_version = new ArrayList<>();
+                                                                              
+                                                                              if(id_version.equalsIgnoreCase(KEY_BIDPLANID_SYNCED))
+                                                                                  isSynced_version = true;
+                                                                              else
+                                                                                  isSynced_version = false;
                                                                               
                                                                               Log.d(AppConstants.TAG , "subUnits_version: " + subUnits_version);
     
@@ -224,14 +278,16 @@ public class BidPlanActivity extends AppCompatActivity implements View.OnClickLi
                                                                                   Log.w(AppConstants.TAG , "subunit: " + subunit);
                                                                               }
     
+                                                                            //  mDB.addBidPlanEntry(mPrefs.getString(AppConstants.USER_ID , "") , id_version  ,Title_version , Metric_version , subUnits_version.toString() , CustomerName_version , City_version+","+Country_version , LocDescription_version , VersionNumber_version);
+                                                                              
                                                                               Log.w(AppConstants.TAG , "version: " + version);
     
                                                                               ArrayList<ChildModel> childlist =  new ArrayList<>();
-    
-                                                                              ChildModel childitem = new ChildModel(VersionNumber_version , Metric_version , CustomerName_version ,  City_version ,  Country_version, subunits_list_version, true , LocDescription_version);
+                                                                              
+                                                                              ChildModel childitem = new ChildModel(VersionNumber_version , Metric_version , CustomerName_version ,  City_version ,  Country_version, subunits_list_version, true , LocDescription_version , subUnits_version.toString());
                                                                               childlist.add(childitem);
     
-                                                                              ParentModel parentitem = new ParentModel(id_version ,  CustomerBidId_version , Title_version,VersionNumber_version , childlist );
+                                                                              ParentModel parentitem = new ParentModel(id_version ,  CustomerBidId_version , Title_version,VersionNumber_version , childlist, true, isSynced_version , subUnits_version.toString() , Metric_version);
                                                                               parentList.add(parentitem);
                                                                           }
     
@@ -247,10 +303,10 @@ public class BidPlanActivity extends AppCompatActivity implements View.OnClickLi
     
                                                                           ArrayList<ChildModel> childlist =  new ArrayList<>();
     
-                                                                          ChildModel childitem = new ChildModel(VersionNumber , Metric , CustomerName ,  City ,  Country, subunits_list , true , LocationDescription);
+                                                                          ChildModel childitem = new ChildModel(VersionNumber , Metric , CustomerName ,  City ,  Country, subunits_list , true , LocationDescription , subUnits.toString());
                                                                           childlist.add(childitem);
     
-                                                                          ParentModel parentitem = new ParentModel(id ,  CustomerBidId , Title,VersionNumber , childlist );
+                                                                          ParentModel parentitem = new ParentModel(id ,  CustomerBidId , Title,VersionNumber , childlist , true , isSynced , subUnits.toString() , Metric);
                                                                           parentList.add(parentitem);
     
                                                                           mAdapter.notifyParentDataSetChanged(true);
@@ -272,7 +328,10 @@ public class BidPlanActivity extends AppCompatActivity implements View.OnClickLi
             {
                 Log.e(AppConstants.TAG , "onErrorResponse: " + error.toString());
                 dialog.dismiss();
-            
+    
+                Toast.makeText(BidPlanActivity.this , "Error ocuured! Please try again",
+                               Toast.LENGTH_LONG).show();
+                
             }
         
         }) {
@@ -286,13 +345,82 @@ public class BidPlanActivity extends AppCompatActivity implements View.OnClickLi
         mRequestQueue.add(postRequest);
     }
     
+    public void getBidPlansLocally()
+    {
+        /*Cursor cursor = mDB.getBidPlanJson(mPrefs.getString(AppConstants.USER_ID , ""));
+        cursor.moveToFirst();
+        String bidPlansJson = cursor.getString(cursor.getColumnIndex(DBController.KEY_BIDPLAN_JSON));
+     
+        Log.v(AppConstants.TAG , "AppConstants.BIDPLANS_JSONARRAY: " + bidPlansJson);*/
+        
+        /////////////////////////////////////////////////////////////
+    
+        parentList.clear();
+        
+        Cursor cursor = mDB.getAllData(DBController.DB_TABLE_BIDPLANS);
+        Log.d(AppConstants.TAG , "getBidPlansLocally size: " + cursor.getCount());
+    
+        if (cursor.moveToFirst())
+        {
+            do
+            {
+                String emp_id = cursor.getString(cursor.getColumnIndex(mDB.KEY_EMPID));
+                String KEY_BIDPLANID = cursor.getString(cursor.getColumnIndex(mDB.KEY_BIDPLANID));
+                String KEY_BIDPLAN_TITLE = cursor.getString(cursor.getColumnIndex(mDB.KEY_BIDPLAN_TITLE));
+                String KEY_BIDPLAN_UNIT = cursor.getString(cursor.getColumnIndex(mDB.KEY_BIDPLAN_UNIT));
+                String KEY_BIDPLAN_SUBUNIT = cursor.getString(cursor.getColumnIndex(mDB.KEY_BIDPLAN_SUBUNIT));
+                String KEY_BIDPLAN_CUSTOMER_NAME = cursor.getString(cursor.getColumnIndex(mDB.KEY_BIDPLAN_CUSTOMER_NAME));
+                String KEY_BIDPLAN_LOCATION = cursor.getString(cursor.getColumnIndex(mDB.KEY_BIDPLAN_LOCATION));
+                String KEY_BIDPLAN_LOCATION_DESC = cursor.getString(cursor.getColumnIndex(mDB.KEY_BIDPLAN_LOCATION_DESC));
+                String KEY_BIDPLAN_VERSION = cursor.getString(cursor.getColumnIndex(mDB.KEY_BIDPLAN_VERSION));
+    
+                Log.v(AppConstants.TAG , "subUnits_version: " + KEY_BIDPLAN_SUBUNIT);
+    
+                ArrayList<SubUnit> subUnitsArray = new ArrayList<>();
+    
+                String[] subUnitParts = KEY_BIDPLAN_SUBUNIT.split(",");
+    
+                for(int i=0; i < subUnitParts.length; i++)
+                {
+                    SubUnit subUnitInst = new SubUnit("" , subUnitParts[i] , "");
+                    subUnitsArray.add(subUnitInst);
+                }
+                
+                Log.i(AppConstants.TAG , "emp_id: " + emp_id);
+                Log.i(AppConstants.TAG , "KEY_BIDPLANID: " + KEY_BIDPLANID);
+                Log.i(AppConstants.TAG , "KEY_BIDPLAN_TITLE: " + KEY_BIDPLAN_TITLE);
+                Log.i(AppConstants.TAG , "KEY_BIDPLAN_UNIT: " + KEY_BIDPLAN_UNIT);
+                Log.i(AppConstants.TAG , "KEY_BIDPLAN_SUBUNIT: " + KEY_BIDPLAN_SUBUNIT);
+                Log.i(AppConstants.TAG , "KEY_BIDPLAN_CUSTOMER_NAME: " + KEY_BIDPLAN_CUSTOMER_NAME);
+                Log.i(AppConstants.TAG , "KEY_BIDPLAN_LOCATION: " + KEY_BIDPLAN_LOCATION);
+                Log.i(AppConstants.TAG , "KEY_BIDPLAN_LOCATION_DESC: " + KEY_BIDPLAN_LOCATION_DESC);
+                Log.i(AppConstants.TAG , "KEY_BIDPLAN_VERSION: " + KEY_BIDPLAN_VERSION);
+    
+                ArrayList<ChildModel> childlist =  new ArrayList<>();
+                ChildModel childitem = new ChildModel(KEY_BIDPLAN_VERSION , KEY_BIDPLAN_UNIT , KEY_BIDPLAN_CUSTOMER_NAME ,  KEY_BIDPLAN_LOCATION ,  KEY_BIDPLAN_LOCATION, subUnitsArray , true , KEY_BIDPLAN_LOCATION_DESC , KEY_BIDPLAN_SUBUNIT);
+                childlist.add(childitem);
+    
+                ParentModel parentitem = new ParentModel(KEY_BIDPLANID ,  "" , KEY_BIDPLAN_TITLE , KEY_BIDPLAN_VERSION , childlist, false, true , KEY_BIDPLAN_SUBUNIT , "metricc");
+                parentList.add(parentitem);
+    
+            }while(cursor.moveToNext());
+    
+            mAdapter.notifyParentDataSetChanged(true);
+            mAdapter.notifyDataSetChanged();
+            recyclerView.setLayoutManager(new LinearLayoutManager(BidPlanActivity.this));
+    
+            cursor.close();
+        }
+       
+    }
+    
    /* private void prepareData()
     {
         ArrayList<ChildModel> childlist =  new ArrayList<>();
-    
+        
         ChildModel childitem = new ChildModel("CHILDD"  , true);
         childlist.add(childitem);
-    
+        
         ParentModel parentitem = new ParentModel("NAMEEE" ,  childlist);
         parentList.add(parentitem);
         parentitem = new ParentModel("NAMEEE" ,  childlist);
@@ -302,10 +430,138 @@ public class BidPlanActivity extends AppCompatActivity implements View.OnClickLi
         parentList.add(parentitem); parentitem = new ParentModel("NAMEasgsdgEE" ,  childlist);
         parentList.add(parentitem); parentitem = new ParentModel("aaaaa" ,  childlist);
         parentList.add(parentitem);
-    
+            
         mAdapter.notifyParentDataSetChanged(true);
         mAdapter.notifyDataSetChanged();
         recyclerView.setLayoutManager(new LinearLayoutManager(BidPlanActivity.this));
     
     }*/
+   
+   public static void syncBid(Context mContext , final String bidPlanID , String title , String unit , String subUnit , String customerName , String location, String loca_desc , String version, final JSONObject postParams)
+   {
+        final DBController mDB = new DBController(mContext);
+       final SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+    
+       Log.i(AppConstants.TAG , "syncBid getCircuitsOffline postPata=rams:: " + postParams.toString());
+       Log.v(AppConstants.TAG , "SubUnits in syncBid:: " + subUnit);
+       
+       mDB.clearTable(DBController.DB_TABLE_BIDPLANS);
+       mDB.addBidPlanEntry(mPrefs.getString(AppConstants.USER_ID , "") , bidPlanID ,title, unit , subUnit , customerName ,location ,  loca_desc , version);
+       
+       Log.v(AppConstants.TAG , "bidPlanID: " + bidPlanID);
+    
+       final ProgressDialog dialog = ProgressDialog.show(mContext, "Processing",
+                                                         "Syncing bid!", true);
+    
+       final RequestQueue mRequestQueue;
+       mRequestQueue = MySingleton.getInstance(mContext).getRequestQueue();
+       StringRequest postRequest = new StringRequest(Request.Method.POST,
+                                                     AppConstants.BASE_URL + "getCircuitsOffline"
+               ,
+                                                     new Response.Listener<String>() {
+                                                         @Override
+                                                         public void onResponse(String response) {
+    
+                                                             try
+                                                             {
+                                                                 JSONObject jsonObj = new JSONObject(response);
+    
+                                                                 boolean success = jsonObj.getBoolean("success");
+                                                                 String message = jsonObj.getString("message");
+    
+                                                                 if(!success)
+                                                                 {
+                                                                     
+                                                                 }
+                                                                 else
+                                                                 {
+                                                                    // mDB.clearTable(DBController.DB_TABLE_CIRCUITS_JSON);
+                                                                     Log.d(AppConstants.TAG , "getCircuitsOffline response while syncing: " + response);
+    
+                                                                     JSONObject result = jsonObj.getJSONObject("result");
+                                                                     JSONArray circuitsArray = result.getJSONArray("Circuits");
+                                                                     JSONArray circuit_subUnits = result.optJSONArray("Subunits");
+    
+                                                                     Log.v(AppConstants.TAG , "circuitsArray szie: " + circuitsArray.length());
+                                                                     
+                                                                     mDB.clearTable(DBController.DB_TABLE_CIRCUIT_PATH);
+                                                                     
+                                                                     for(int i=0; i<circuitsArray.length(); i++)
+                                                                     {
+                                                                         JSONObject circuitObj = circuitsArray.getJSONObject(i);
+                                                                         String circuit_id = circuitObj.opt("Id").toString();
+                                                                         String circuit_title = circuitObj.opt("Title").toString();
+                                                                         String circuit_milage = circuitObj.opt("Milage").toString();
+                                                                         String circuit_linePath = circuitObj.optJSONArray("CircuitSurveyPath").toString();
+                                                                         String circuit_lineType = circuitObj.opt("LineType").toString();
+                                                                         String circuit_isDelegated = circuitObj.opt("IsDelegated").toString();
+                                                                         String circuit_SurveysCount = circuitObj.opt("SurveysCount").toString();
+                                                                         String circuit_EquipmentNotes = circuitObj.opt("EquipmentNotes").toString();
+                                                                         
+                                                                         mDB.addCircuitPath(mPrefs.getString(AppConstants.USER_ID , "") , bidPlanID , circuit_id , circuit_title , circuit_milage , circuit_linePath , circuit_lineType , circuit_isDelegated , circuit_subUnits.toString() , circuit_SurveysCount , circuit_EquipmentNotes);
+                                                                     }
+    
+                                                                     JSONArray circuitTypesArray = result.getJSONArray("CircuitTypes");
+                                                                     mPrefs.edit().putString(AppConstants.CIRCUIT_TYPES , circuitTypesArray.toString()).commit();
+                                                                     
+                                                                    /* mDB.clearTable(DBController.DB_TABLE_CIRCUITS_JSON);
+                                                                     mDB.addCircuitsJSON(mPrefs.getString(AppConstants.USER_ID , "") , bidPlanID , response);*/
+                                                                 }
+                                                                 
+                                                             }
+                                                             catch (JSONException e)
+                                                             {
+                                                                 Log.e(AppConstants.TAG , "JSONException: " + e.toString());
+                                                             }
+                                                             
+                                                             dialog.dismiss();
+                    
+                                                         }
+                                                     }, new Response.ErrorListener() {
+           @Override
+           public void onErrorResponse(VolleyError error)
+           {
+               Log.e(AppConstants.TAG , "onErrorResponse: " + error.toString());
+              
+               dialog.dismiss();
+               String json = null;
+               
+           }
+        
+       }) {
+        
+           @Override
+           public byte[] getBody()  {
+               //  String str = "{\"login\":\""+login+"\",\"password\":\""+pass+"\"}";
+               return postParams.toString().getBytes();
+           }
+        
+           public String getBodyContentType()
+           {
+               return "application/json";
+           }
+       };
+    
+       postRequest.setRetryPolicy(new DefaultRetryPolicy(
+               60000,
+               DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+               DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+    
+       mRequestQueue.add(postRequest);
+   }
+    
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        Log.i(AppConstants.TAG , "onResume");
+    
+        parentList.clear();
+        if(AppConstants.isNetworkAvailable(BidPlanActivity.this))
+        {
+            getBidPlans();
+        }
+        else
+            getBidPlansLocally();
+    }
 }

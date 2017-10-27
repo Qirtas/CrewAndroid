@@ -1,4 +1,4 @@
-package asplundh.sps.com.asplundhproductivity.Expandable;
+package asplundh.sps.com.asplundhproductivity.ExpandableCircuit;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -16,10 +16,10 @@ import asplundh.sps.com.asplundhproductivity.R;
 import asplundh.sps.com.asplundhproductivity.Utils.AppConstants;
 
 /**
- * Created by Malik Muhamad Qirtas on 10/13/2017.
+ * Created by Malik Muhamad Qirtas on 10/25/2017.
  */
 
-public class RecipeAdapter extends ExpandableRecyclerAdapter<ParentModel, ChildModel, OuterViewHolder, InnerViewHolder>
+public class CircuitExpandAdapter extends ExpandableRecyclerAdapter<CircuitParentModel, CircuitChildModel, CircuitOuterViewHolder, CircuitInnerViewHolder>
 {
     private static final int PARENT_VEGETARIAN = 0;
     private static final int PARENT_NORMAL = 1;
@@ -27,10 +27,10 @@ public class RecipeAdapter extends ExpandableRecyclerAdapter<ParentModel, ChildM
     private static final int CHILD_NORMAL = 3;
     
     private LayoutInflater mInflater;
-    private List<ParentModel> mRecipeList;
+    private List<CircuitParentModel> mRecipeList;
     Context mContext;
     
-    public RecipeAdapter(Context context, @NonNull List<ParentModel> recipeList) {
+    public CircuitExpandAdapter(Context context, @NonNull List<CircuitParentModel> recipeList) {
         super(recipeList);
         mRecipeList = recipeList;
         mInflater = LayoutInflater.from(context);
@@ -40,10 +40,10 @@ public class RecipeAdapter extends ExpandableRecyclerAdapter<ParentModel, ChildM
     @UiThread
     @NonNull
     @Override
-    public OuterViewHolder onCreateParentViewHolder(@NonNull ViewGroup parentViewGroup, int viewType) {
+    public CircuitOuterViewHolder onCreateParentViewHolder(@NonNull ViewGroup parentViewGroup, int viewType) {
         View recipeView;
-       
-        int layout = R.layout.recipe_view;
+        
+        int layout = R.layout.row_outer_circuit;
         
         switch (viewType) {
             default:
@@ -54,33 +54,34 @@ public class RecipeAdapter extends ExpandableRecyclerAdapter<ParentModel, ChildM
                 recipeView = mInflater.inflate(R.layout.vegetarian_recipe_view, parentViewGroup, false);
                 break;*/
         }
-        return new OuterViewHolder(recipeView , mContext);
+        return new CircuitOuterViewHolder(recipeView , mContext);
     }
     
     @UiThread
     @NonNull
     @Override
-    public InnerViewHolder onCreateChildViewHolder(@NonNull ViewGroup childViewGroup, int viewType) {
+    public CircuitInnerViewHolder onCreateChildViewHolder(@NonNull ViewGroup childViewGroup, int viewType) {
         View ingredientView;
         switch (viewType) {
             default:
             case CHILD_NORMAL:
-                ingredientView = mInflater.inflate(R.layout.ingredient_view, childViewGroup, false);
+                ingredientView = mInflater.inflate(R.layout.row_inner_circuit, childViewGroup, false);
                 break;
             case CHILD_VEGETARIAN:
-                ingredientView = mInflater.inflate(R.layout.vegetarian_ingredient_view, childViewGroup, false);
+                ingredientView = mInflater.inflate(R.layout.row_inner_circuit, childViewGroup, false);
                 break;
         }
-        return new InnerViewHolder(ingredientView);
+        return new CircuitInnerViewHolder(ingredientView);
     }
+    
     
     @UiThread
     @Override
-    public void onBindParentViewHolder(@NonNull OuterViewHolder recipeViewHolder, int parentPosition, @NonNull ParentModel recipe) {
+    public void onBindParentViewHolder(@NonNull CircuitOuterViewHolder recipeViewHolder, int parentPosition, @NonNull CircuitParentModel recipe) {
         recipeViewHolder.bind(recipe);
         
         // mRecipeList.get(parentPosition).;
-    
+        
         /*recipeViewHolder.itemView.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -90,17 +91,17 @@ public class RecipeAdapter extends ExpandableRecyclerAdapter<ParentModel, ChildM
             }
         });*/
         
-       // recipeViewHolder.itemView.getParent().
+        // recipeViewHolder.itemView.getParent().
         
         
-      //  Log.i(AppConstants.TAG , "onBindParentViewHolder: "  + recipeViewHolder.getAdapterPosition());
+        //  Log.i(AppConstants.TAG , "onBindParentViewHolder: "  + recipeViewHolder.getAdapterPosition());
         
-     //   ImageView mArrowExpandImageView = (ImageView) itemView.findViewById(R.id.iv_Arrow);
+        //   ImageView mArrowExpandImageView = (ImageView) itemView.findViewById(R.id.iv_Arrow);
     }
     
     @UiThread
     @Override
-    public void onBindChildViewHolder(@NonNull InnerViewHolder ingredientViewHolder, int parentPosition, int childPosition, @NonNull ChildModel ingredient) {
+    public void onBindChildViewHolder(@NonNull CircuitInnerViewHolder ingredientViewHolder, int parentPosition, int childPosition, @NonNull CircuitChildModel ingredient) {
         ingredientViewHolder.bind(ingredient);
     }
     
@@ -116,14 +117,14 @@ public class RecipeAdapter extends ExpandableRecyclerAdapter<ParentModel, ChildM
         }
         catch (IndexOutOfBoundsException e)
         {
-            Log.e(AppConstants.TAG , "IndexOutOfBoundsException in  RECIPE ADAPTER getParentViewType: " + e.toString());
+            Log.e(AppConstants.TAG , "IndexOutOfBoundsException in getParentViewType CIRcuit expnad adapter: " + e.toString());
         }
         return PARENT_NORMAL;
     }
     
     @Override
     public int getChildViewType(int parentPosition, int childPosition) {
-        ChildModel ingredient = mRecipeList.get(parentPosition).getIngredient(childPosition);
+        CircuitChildModel ingredient = mRecipeList.get(parentPosition).getIngredient(childPosition);
         
         if(childPosition == 0)
             return CHILD_VEGETARIAN;
