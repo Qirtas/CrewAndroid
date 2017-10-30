@@ -85,6 +85,16 @@
                 android:textSize="19dp"
                 android:layout_toEndOf="@+id/iv_username" />
 
+            <ImageView
+                android:id="@+id/cancel_id"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/clear"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="4dp"
+                />
+
         </RelativeLayout>
 
         //PIN

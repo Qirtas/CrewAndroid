@@ -60,6 +60,7 @@ import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.annotations.PolylineOptions;
 import com.mapbox.mapboxsdk.camera.CameraUpdate;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
+import com.mapbox.mapboxsdk.exceptions.InvalidLatLngBoundsException;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -87,6 +88,7 @@ import asplundh.sps.com.asplundhproductivity.Utils.AppConstants;
 
 import static asplundh.sps.com.asplundhproductivity.Activity.LocationDemoActivity.Lat;
 import static asplundh.sps.com.asplundhproductivity.Activity.LocationDemoActivity.Lng;
+import static asplundh.sps.com.asplundhproductivity.Activity.LocationDemoActivity.builder;
 
 public class CircuitEstimationActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
@@ -135,6 +137,8 @@ public class CircuitEstimationActivity extends AppCompatActivity implements Goog
     String circuitSurveyPathArray , circuitName = "";
     DBController mDB;
     TextView tv_bid_plan_unit;
+   // LatLngBounds.Builder builder = new LatLngBounds.Builder();
+    int builderCounter = 0;
     
     double startLat = 0, startLng = 0 , endLat = 0 , endLng = 0;
     
@@ -695,13 +699,13 @@ public class CircuitEstimationActivity extends AppCompatActivity implements Goog
                 if(!isPause)
                 {
                     tv_pauseresume.setText("Resume");
-                    iv_pause_resume.setImageResource(R.drawable.play_btnn);
+                    iv_pause_resume.setBackgroundResource(R.drawable.play_btnn);
                     isPause = true;
                 }
                 else
                 {
                     tv_pauseresume.setText("Pause");
-                    iv_pause_resume.setImageResource(R.drawable.pause_iconn);
+                    iv_pause_resume.setBackgroundResource(R.drawable.pause_iconn);
                     isPause = false;
                 }
                 
@@ -923,7 +927,7 @@ public class CircuitEstimationActivity extends AppCompatActivity implements Goog
     {
          LAT_Current = location.getLatitude() + "";
          LNG_Current = location.getLongitude() + "";
-    
+        
         if(!isPause)
         {
             userPathPointsArray.add(new Point(location.getLatitude()+ "" , location.getLongitude() + ""));
@@ -1186,15 +1190,35 @@ public class CircuitEstimationActivity extends AppCompatActivity implements Goog
         {
             LatLng latlng = new LatLng(Double.parseDouble(pointsArrayList.get(i).getLAT()) , Double.parseDouble(pointsArrayList.get(i).getLNG()));
             optionsBLACK.add(latlng);
+    
+            builder.include(latlng);
+            builderCounter++;
         }
         
         if(pointsArrayList.size() != 0)
         {
-            CameraUpdate center=
-                    CameraUpdateFactory.newLatLng(new LatLng(Double.parseDouble(pointsArrayList.get(0).getLAT()) , Double.parseDouble(pointsArrayList.get(0).getLNG())));
-            CameraUpdate zoom= CameraUpdateFactory.zoomTo(13);
-            map.moveCamera(center);
-            map.animateCamera(zoom);
+            Log.v(AppConstants.TAG , "builderCounter: " + builderCounter);
+    
+            try
+            {
+                if(builderCounter > 1)
+                {
+                    LatLngBounds bounds = builder.build();
+                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 15));
+                }
+                else
+                {
+                    CameraUpdate center=
+                            CameraUpdateFactory.newLatLng(new LatLng(Double.parseDouble(pointsArrayList.get(0).getLAT()) , Double.parseDouble(pointsArrayList.get(0).getLNG())));
+                    CameraUpdate zoom= CameraUpdateFactory.zoomTo(13);
+                    map.moveCamera(center);
+                    map.animateCamera(zoom);
+                }
+            }
+            catch (InvalidLatLngBoundsException e)
+            {
+                Log.e(AppConstants.TAG , "InvalidLatLngBoundsException: " + e.toString());
+            }
             
             map.addPolyline(optionsBLACK);
         }

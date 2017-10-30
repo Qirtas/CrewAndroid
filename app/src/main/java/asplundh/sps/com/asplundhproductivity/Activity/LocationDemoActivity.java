@@ -53,6 +53,7 @@ import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.annotations.PolylineOptions;
 import com.mapbox.mapboxsdk.camera.CameraUpdate;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
+import com.mapbox.mapboxsdk.exceptions.InvalidLatLngBoundsException;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -113,6 +114,8 @@ public class LocationDemoActivity extends AppCompatActivity implements  GoogleAp
     boolean isMapReady = false;
     JSONArray surveyPathArray;
     OfflineManager offlineManager;
+    public static LatLngBounds.Builder builder = new LatLngBounds.Builder();
+    int builderCounter = 0;
     
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -168,8 +171,8 @@ public class LocationDemoActivity extends AppCompatActivity implements  GoogleAp
     
                 if(AppConstants.isNetworkAvailable(LocationDemoActivity.this))
                     getCircuitPath();
-                else
-                    getCircuitPathLocally();
+                /*else
+                    getCircuitPathLocally();*/
                 
                 offlineManager = OfflineManager.getInstance(LocationDemoActivity.this);
                 
@@ -529,6 +532,9 @@ public class LocationDemoActivity extends AppCompatActivity implements  GoogleAp
         Lat = location.getLatitude();
         Lng = location.getLongitude();
         LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
+        
+        builder.include(new LatLng(Lat , Lng));
+        builderCounter ++;
     
         //map.clear();
         MarkerOptions markerOptions = new MarkerOptions().position(point).title("");
@@ -740,6 +746,7 @@ public class LocationDemoActivity extends AppCompatActivity implements  GoogleAp
                                                                   }
                                                                   else
                                                                   {
+                                                                      
                                                                       boolean isPathExist = false , isSurveyExist = false;
                                                                       JSONObject result = jsonObj.getJSONObject("result");
                                                                       JSONArray pointsArray = result.getJSONArray("CircuitPath");
@@ -756,7 +763,9 @@ public class LocationDemoActivity extends AppCompatActivity implements  GoogleAp
         
                                                                               Point point = new Point(LAT ,LNG);
                                                                               pointsArrayList.add(point);
-        
+                                                                              
+                                                                                builder.include(new LatLng(Double.parseDouble(LAT) , Double.parseDouble(LNG)));
+                                                                              builderCounter ++;
                                                                           }
     
                                                                           drawCircuit(pointsArrayList , "DELEGATED");
@@ -853,6 +862,10 @@ public class LocationDemoActivity extends AppCompatActivity implements  GoogleAp
             {
                 LatLng latlng = new LatLng(Double.parseDouble(pointsArrayList.get(i).getLAT()) , Double.parseDouble(pointsArrayList.get(i).getLNG()));
                 options.add(latlng);
+                
+                builder.include(latlng);
+                builderCounter++;
+                
             }
     
             mapView.getMapAsync(new OnMapReadyCallback()
@@ -862,12 +875,34 @@ public class LocationDemoActivity extends AppCompatActivity implements  GoogleAp
                 {
                     if(pointsArrayList.size() != 0)
                     {
-                        CameraUpdate center=
-                                CameraUpdateFactory.newLatLng(new LatLng(Double.parseDouble(pointsArrayList.get(0).getLAT()) , Double.parseDouble(pointsArrayList.get(0).getLNG())));
-                        CameraUpdate zoom= CameraUpdateFactory.zoomTo(13);
-                        map.moveCamera(center);
-                        map.animateCamera(zoom);
+                        Log.v(AppConstants.TAG , "builderCounter: " + builderCounter);
+    
+                        try
+                        {
+                            if(builderCounter > 1)
+                            {
+                                LatLngBounds bounds = builder.build();
+                                map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 20));
+                            }
+                            else
+                            {
+                                CameraUpdate center=  CameraUpdateFactory.newLatLng(new LatLng(Double.parseDouble(pointsArrayList.get(0).getLAT()) , Double.parseDouble(pointsArrayList.get(0).getLNG())));
+                                CameraUpdate zoom= CameraUpdateFactory.zoomTo(13);
+                                map.moveCamera(center);
+                                map.animateCamera(zoom);
         
+                            }
+                        }
+                        catch (InvalidLatLngBoundsException e)
+                        {
+                            Log.e(AppConstants.TAG , "InvalidLatLngBoundsException: " + e.toString());
+                        }
+                        
+                        
+                       /* CameraUpdate zoom= CameraUpdateFactory.zoomTo(13);
+                        map.moveCamera(center);*/
+                       // map.animateCamera(zoom);
+                        
                         map.addPolyline(options);
                     }
                 }

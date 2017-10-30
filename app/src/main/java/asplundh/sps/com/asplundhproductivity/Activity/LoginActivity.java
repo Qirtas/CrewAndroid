@@ -12,7 +12,9 @@ import android.os.Handler;
 import android.os.ResultReceiver;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -48,7 +50,7 @@ import static asplundh.sps.com.asplundhproductivity.R.id.scan_barcode;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener
 {
     EditText et_username , et_pin;
-    ImageView togglePin;
+    ImageView togglePin ,  clearId;
     DBController mDB;
     SharedPreferences mPrefs;
     BoundsResultReceiver mResultReceiver;
@@ -73,6 +75,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setupUI(findViewById(R.id.activity_login));
         mDB = new DBController(getApplicationContext());
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+    
+        clearId = (ImageView) findViewById(R.id.cancel_id);
+        clearId.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                et_username.setText("");
+            }
+        });
     
        // mDB.addBidPlanEntry("111" , "1"  ,"aaa" , "jdh" , "sdfndk" , "sdfjk" ,"j" , "sdfjh" , "000");
         
@@ -101,6 +111,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     togglePin.setImageDrawable(getResources().getDrawable(R.drawable.toggle_visibility));
 //                    mEtPwd.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                 }
+            
+            }
+        });
+    
+        et_username.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            
+            }
+        
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            
+                clearId.setVisibility(View.VISIBLE);
+            }
+        
+            @Override
+            public void afterTextChanged(Editable editable) {
             
             }
         });

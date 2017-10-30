@@ -20,7 +20,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity.SplashActivity">
+        <activity android:name=".Activity.SplashActivity"
+                  android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -36,24 +37,31 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyB0Yr2KaSrg3gGYdwClE51ggGReVw_wYVw"/>
 
-        <activity android:name=".Activity.MainActivity">
+        <activity android:name=".Activity.MainActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".Activity.LocationActivity">
+        <activity android:name=".Activity.LocationActivity"
+                  android:screenOrientation="portrait">
         </activity>
 
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="dacf78afb47198113bbb014c085a43e51606fb8b"/>
 
-        <activity android:name=".Activity.ConfirmationActivity">
+        <activity android:name=".Activity.ConfirmationActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".Activity.HomeActivity">
+        <activity android:name=".Activity.HomeActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".Activity.VoiceRecordingActivity">
+        <activity android:name=".Activity.VoiceRecordingActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".Activity.AddTextActivity">
+        <activity android:name=".Activity.AddTextActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".Activity.StartActivity">
+        <activity android:name=".Activity.StartActivity"
+                  android:screenOrientation="portrait">
         </activity>
 
         <receiver android:name=".NetworkChangeReceiver">
@@ -62,25 +70,35 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".Activity.LoginActivity">
+        <activity android:name=".Activity.LoginActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".Activity.BidPlanActivity">
+        <activity android:name=".Activity.BidPlanActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".Activity.SearchSuggestionActivity">
+        <activity android:name=".Activity.SearchSuggestionActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".Activity.CaptureActivityPortrait">
+        <activity android:name=".Activity.CaptureActivityPortrait"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".Activity.CircuitsActivity">
+        <activity android:name=".Activity.CircuitsActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".Activity.CreateNewCircuitActivity">
+        <activity android:name=".Activity.CreateNewCircuitActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".Activity.MapActivity">
+        <activity android:name=".Activity.MapActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".Activity.CircuitEstimationActivity">
+        <activity android:name=".Activity.CircuitEstimationActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".Activity.LocationDemoActivity">
+        <activity android:name=".Activity.LocationDemoActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".Activity.MapDownloadActivity">
+        <activity android:name=".Activity.MapDownloadActivity"
+                  android:screenOrientation="portrait">
         </activity>
     </application>
 

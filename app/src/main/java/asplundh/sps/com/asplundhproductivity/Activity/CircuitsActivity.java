@@ -209,33 +209,42 @@ public class CircuitsActivity extends AppCompatActivity implements View.OnClickL
                                                                       
                                                                       /*for(int i=0; i<circuitsArray.length(); i++)
                                                                       {*/
-                                                                      for(int i=circuitsArray.length()-1; i>=0; i--)
+                                                                      
+                                                                      if(circuitsArray.length() > 0)
                                                                       {
-                                                                          JSONObject object = circuitsArray.getJSONObject(i);
-                                                                          String circuitID =  object.opt("Id").toString();
-                                                                          String circuitTitle =  object.opt("Title").toString();
-                                                                          String circuitMilage =  object.opt("Milage").toString();
-                                                                          String EquipmentNotes =  object.opt("EquipmentNotes").toString();
-                                                                          String SurveysCount =  object.opt("SurveysCount").toString();
-                                                                          String circuitLineType =  object.opt("LineType").toString();
-                                                                          String circuitIsDelegated =  object.opt("IsDelegated").toString();
-                                                                          String circuitLinePath =  object.opt("LinePath").toString();
-    
-                                                                          ArrayList<CircuitChildModel> childlist =  new ArrayList<>();
-                                                                          CircuitChildModel childitem = new CircuitChildModel(circuitLineType , circuitMilage , SurveysCount , EquipmentNotes , true);
-                                                                          childlist.add(childitem);
-                                                                          
-                                                                          CircuitParentModel parentitem = new CircuitParentModel(circuitID , circuitTitle , circuitIsDelegated, childlist , bidPlanID);
-                                                                          parentList.add(parentitem);
-    
-                                                                          mAdapterExpand.notifyParentDataSetChanged(true);
-                                                                          mAdapterExpand.notifyDataSetChanged();
-                                                                          recyclerView.setLayoutManager(new LinearLayoutManager(CircuitsActivity.this));
+                                                                          for(int i=circuitsArray.length()-1; i>=0; i--)
+                                                                          {
+                                                                              JSONObject object = circuitsArray.getJSONObject(i);
+                                                                              String circuitID =  object.opt("Id").toString();
+                                                                              String circuitTitle =  object.opt("Title").toString();
+                                                                              String circuitMilage =  object.opt("Milage").toString();
+                                                                              String EquipmentNotes =  object.opt("EquipmentNotes").toString();
+                                                                              String SurveysCount =  object.opt("SurveysCount").toString();
+                                                                              String circuitLineType =  object.opt("LineType").toString();
+                                                                              String circuitIsDelegated =  object.opt("IsDelegated").toString();
+                                                                              String circuitLinePath =  object.opt("LinePath").toString();
+        
+                                                                              ArrayList<CircuitChildModel> childlist =  new ArrayList<>();
+                                                                              CircuitChildModel childitem = new CircuitChildModel(circuitLineType , circuitMilage , SurveysCount , EquipmentNotes , true);
+                                                                              childlist.add(childitem);
+        
+                                                                              CircuitParentModel parentitem = new CircuitParentModel(circuitID , circuitTitle , circuitIsDelegated, childlist , bidPlanID);
+                                                                              parentList.add(parentitem);
+        
+                                                                              mAdapterExpand.notifyParentDataSetChanged(true);
+                                                                              mAdapterExpand.notifyDataSetChanged();
+                                                                              recyclerView.setLayoutManager(new LinearLayoutManager(CircuitsActivity.this));
                                                                           /*Circuit circuit = new Circuit(circuitID ,circuitTitle , circuitMilage , circuitLineType , circuitIsDelegated , circuitLinePath , bidPlanID);
                                                                           circuitsList.add(circuit);
                                                                           mAdapter.notifyDataSetChanged();*/
+                                                                          }
                                                                       }
-    
+                                                                      else
+                                                                      {
+                                                                          Toast.makeText(CircuitsActivity.this , "No circuits available!",
+                                                                                         Toast.LENGTH_LONG).show();
+                                                                      }
+                                                                      
                                                                       JSONArray circuitTypesArray = result.getJSONArray("CircuitTypes");
                                                                       mPrefs.edit().putString(AppConstants.CIRCUIT_TYPES , circuitTypesArray.toString()).commit();
     

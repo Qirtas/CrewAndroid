@@ -114,13 +114,18 @@ public class CreateNewCircuitActivity extends AppCompatActivity implements View.
         switch (id)
         {
             case R.id.btn_create:
-                JSONObject postParams = getPostParams();
-                Log.v(AppConstants.TAG , "POST PARAMS: " + postParams);
                 
-                if(AppConstants.isNetworkAvailable(CreateNewCircuitActivity.this))
-                    CreateCircuit(postParams);
-                else
-                    CreateCircuitOffline(postParams);
+                if(validateForm())
+                {
+                    JSONObject postParams = getPostParams();
+                    Log.v(AppConstants.TAG , "POST PARAMS: " + postParams);
+    
+                    if(AppConstants.isNetworkAvailable(CreateNewCircuitActivity.this))
+                        CreateCircuit(postParams);
+                    else
+                        CreateCircuitOffline(postParams);
+                }
+                
                 break;
     
             case R.id.back_ic:
@@ -336,5 +341,25 @@ public class CreateNewCircuitActivity extends AppCompatActivity implements View.
         
         mDB.addNewCircuitEntry(mPrefs.getString(AppConstants.USER_ID , "") , BIDPLANID , randCircuitID +"" , postParams.toString());
         finish();
+    }
+    
+    private boolean validateForm()
+    {
+        boolean valid = true;
+        if (et_circuit_title.getText().toString().length() == 0)
+        {
+            et_circuit_title.setError("Please enter circuit title");
+            //  clearId.setVisibility(View.GONE);
+            valid = false;
+        }
+        else if(lineTypeID == 0)
+        {
+            Toast.makeText(CreateNewCircuitActivity.this, "Please choose a line type",
+                           Toast.LENGTH_LONG).show();
+            valid = false;
+        }
+       
+        return valid;
+        
     }
 }
