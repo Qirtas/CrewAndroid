@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="layout_trees_textsize">16sp</dimen>
+    <dimen name="layout_note_title_textsize">18sp</dimen>
+    <dimen name="layout_note_note_textsize">16sp</dimen>
+    <dimen name="activity_map_btn_text_size">18sp</dimen>
+    <dimen name="activity_login_side_padding">20dp</dimen>
+
+    <dimen name="activity_bidplan_tv_padding">10dp</dimen>
+
+    <dimen name="bidplan_location_text_max_width">220dp</dimen>
+
+</resources>

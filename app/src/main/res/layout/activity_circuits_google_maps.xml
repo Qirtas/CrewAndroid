@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:id="@+id/circuits_goggle"
+              android:background="@color/colorVeryLightGray"
+              xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+    >
+
+    //Top bar
+
+    <RelativeLayout
+        android:id="@+id/iv_back"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorPrimary"
+        >
+
+        <RelativeLayout
+            android:id="@+id/back_ic"
+            android:layout_width="30dp"
+            android:layout_height="match_parent">
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/back_ic"
+                />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/work_plan"
+            android:textColor="@color/white"
+            android:layout_toRightOf="@+id/back_ic"
+            android:textSize="22sp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="3dp"
+            />
+    </RelativeLayout>
+
+    //Tab Layout
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:background="@color/colorPrimary"
+        android:weightSum="2"
+        android:visibility="gone"
+        >
+
+        //List tab
+        <RelativeLayout
+            android:id="@+id/btn_list"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/tv_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:layout_centerInParent="true"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:text="LIST"
+                />
+
+            <View
+                android:id="@+id/view_list_active"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/endcolor"/>
+
+        </RelativeLayout>
+
+        //Map tab
+        <RelativeLayout
+            android:id="@+id/btn_map"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/tv_map"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/endcolor"
+                android:textSize="15sp"
+                android:layout_centerInParent="true"
+                android:textStyle="bold"
+                android:text="MAP"
+                />
+
+            <View
+                android:id="@+id/view_map_active"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:visibility="gone"
+                android:background="@color/endcolor"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+    //////Circuits list Layout
+
+
+    <LinearLayout
+        android:id="@+id/lay_circuits_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible"
+        >
+
+        //Seach bar
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            >
+
+            <EditText
+                android:id="@+id/et_circuits"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/search_circuit"
+                android:padding="13dp"
+                android:textSize="14sp"
+                android:cursorVisible="false"
+                android:gravity="center_vertical"
+                android:drawableRight="@drawable/ic_search"
+                android:background="@drawable/bg_tv_search"/>
+
+        </RelativeLayout>
+
+        //list
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:scrollbars="vertical"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    ///////Map layout
+
+    <FrameLayout
+        android:id="@+id/lay_map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+
+            <TextView
+                android:id="@+id/lay_wait"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Please wait. Circuits are being drawn."
+                android:background="@color/grey"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:padding="6dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="6dp"
+                android:visibility="gone"
+                />
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
+
+
+</LinearLayout>

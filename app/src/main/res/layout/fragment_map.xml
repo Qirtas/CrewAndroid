@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+                xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+    >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+
+    <com.mapbox.mapboxsdk.maps.MapView
+        android:id="@+id/mapview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        mapbox:mapbox_styleUrl="mapbox://styles/mapbox/streets-v10"
+        mapbox:mapbox_cameraZoom="11"
+        />
+
+        <RelativeLayout
+            android:id="@+id/circuit_details"
+            android:layout_width="match_parent"
+            android:layout_height="105dp"
+            android:background="@color/white"
+            android:layout_gravity="bottom"
+            android:visibility="invisible"
+            >
+            <TextView
+                android:id="@+id/tv_circuit_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Crew work assignment 1"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginTop="12dp"
+                android:layout_marginLeft="12dp"
+                />
+
+            <TextView
+                android:id="@+id/tv_circuit_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Path circuit 1.1"
+                android:textColor="@color/grey"
+                android:layout_below="@+id/tv_circuit_title"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginTop="3dp"
+                android:layout_marginLeft="12dp"
+                />
+
+            <TextView
+                android:id="@+id/tv_circuit_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="30 hours (3 Non-productive)"
+                android:textColor="@color/grey"
+                android:layout_below="@+id/tv_circuit_detail"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginTop="3dp"
+                android:layout_marginLeft="12dp"
+                />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_circuit_time"
+                >
+                <TextView
+                    android:id="@+id/tv_start_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Start date: 12/02/17"
+                    android:textColor="@color/grey"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginLeft="12dp"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_end_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="End date: 12/07/17"
+                    android:textColor="@color/grey"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginLeft="18dp"
+                    />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_status_circuit"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="20dp"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pending"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textSize="12sp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="3dp"
+                    />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/btn_start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="20dp"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Start"
+                    android:textColor="@color/blueee"
+                    android:textStyle="bold"
+                    android:textSize="14sp"
+                    />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+</FrameLayout>
+
+</RelativeLayout>

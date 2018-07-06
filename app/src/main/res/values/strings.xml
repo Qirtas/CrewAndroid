@@ -1,18 +1,135 @@
 <resources>
-    <string name="app_name">AsplundhProductivity</string>
 
-    <string name="accessToken">pk.eyJ1IjoicWlydGFzIiwiYSI6ImNqOGZoajV2ODA0NDEycXMxNDJqbHIydnkifQ.HB3H8VxTc9hW_XR1DDSZJg</string>
+    <string name="add">add</string>
+    <string name="submit">SUBMIT</string>
+    <string name="cancel">cancel</string>
+    <string name="create">create</string>
+    <string name="start">start</string>
+    <string name="pause">pause</string>
+    <string name="resume">resume</string>
+    <string name="finish">finish</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
+    <string name="text">Note</string>
+    <string name="enter_text">Enter text here.</string>
+    <string name="confirmation_alert">Are you sure?</string>
+    <string name="getting_data">Retrieving data. Please wait.</string>
+    <string name="posting_data">Posting data. Please wait.</string>
+    <string name="generic_error">Error occurred. Please try again.</string>
+    <string name="retry">retry</string>
+    <string name="reset">reset</string>
+    <string name="update">Update</string>
+    <string name="select_Date">Select date:</string>
+
+
+    <string name="app_name">CrewApp</string>
+
+    <string name="productivity_app">Productivity App</string>
+    <string name="search_work_plan">Search work plan</string>
+    <string name="no_workplan_found">No work plan found.</string>
+
+    <string name="work_plan">Work Plan</string>
+    <string name="work_assignment">Work Assignment</string>
+
+
+    <string name="setting">Settings</string>
+    <string name="permission_not_granted">Sorry, the application will not work without the asked permissions.</string>
+    <string name="camera_permission_not_granted">Sorry you cannot access scanner without giving the asked permission.</string>
+    <string name="location_permission_not_granted">Sorry you cannot use maps or location without giving the asked permission.</string>
+
+    <string name="comma">, </string>
+
+    <string name="activity_bidplans">Bid Plans</string>
+    <string name="version_no">Version No.</string>
+    <string name="location_description">Location Description</string>
+    <string name="view">View</string>
+    <string name="search_bidplan">Search bid plans</string>
+    <string name="bidplan_already_synced">Bid plan is already synced. Do you want to update the bid plan?</string>
+    <string name="no_bidplan_synced">No synced bid plans found.</string>
+    <string name="no_bidplan_found">No bid plan found.</string>
+    <string name="unsynced_circuits">circuits unsynced.</string>
+
+    <string name="no_bidplan_found_plz_sync_first">No bid plan found. Please sync a bid plan first and then enable offline mode</string>
+
+
+    <string name="activity_circuits">Circuits</string>
+    <string name="search_circuit">Search circuits</string>
+    <string name="surveys_completed">Survey(s) completed</string>
+    <string name="miles">Miles</string>
+    <string name="equipment_note">Equipment note</string>
+    <string name="no_circuit_found">No circuits found.</string>
+
+    <string name="activity_new_circuit">New circuit</string>
+    <string name="type">Type</string>
+    <string name="line_type_error">Please choose a line type.</string>
+    <string name="circuit_title_error">Please enter a circuit title.</string>
+    <string name="circuit_title">Circuit title: </string>
+
+
+    <string name="activity_survey">Survey</string>
+    <string name="add_note">Add note</string>
+    <string name="edit">Edit</string>
+    <string name="lock">Lock</string>
+    <string name="unlock">Unlock</string>
+    <string name="enter_note">Enter note:</string>
+    <string name="discard">discard</string>
+    <string name="empty_note">Please type something before adding a text.</string>
+    <string name="exit_edit_mode">Exit edit mode</string>
+    <string name="update_counter">update counter</string>
+    <string name="finish_survey">Finish Survey</string>
+    <string name="add_trees_current_point">Update counter at current location</string>
+    <string name="add_trees_path">Update counter at selected path</string>
+    <string name="draggable_toast">Tap on map to draw path</string>
+    <string name="m">m</string>
+    <string name="loc_unknown">Your location is not determined yet.</string>
+    <string name="add_branch_guide">Tap on map to add path or update counter at current position.</string>
+    <string name="no_counter_or_branch">Please add counters or branches before submitting a survey.</string>
+    <string name="finding_location">Finding your location.</string>
+    <string name="back">Back</string>
+    <string name="summary">Summary</string>
+
+
+    <string name="activity_survey_finalization"></string>
+    <string name="circuit">Circuit:</string>
+    <string name="survey">Survey</string>
+
+    <string name="survey_post_success">Survey has been saved successfully.</string>
+    <string name="survey_post_failure">Survey sync failure.</string>
+    <string name="survey_save_local">Survey saved locally.</string>
+
+    <string name="activity_demo"></string>
+    <string name="no_circuit_path">Circuit does not contain a circuit path.</string>
+    <string name="no_survey_path">Circuit does not contain a survey path.</string>
+    <string name="accuracy_issue">Please try again after few secs. Accuracy is not better now.</string>
+
+    <string name="activity_download">Downloading Map</string>
+    <string name="downloading">Downloading, please wait.</string>
+    <string name="download_limit_reached">Map download limit reached.</string>
+    <string name="lower_zoom">Lowering maximum zoom levels and restarting.</string>
+    <string name="map_too_big">Sorry, map region selected is too big to download.</string>
+    <string name="cancel_download">Cancelling map download.</string>
+    <string name="cancel_download_msg">Are you sure?</string>
+    <string name="map_download_successful">Map downloaded successfully.</string>
+    <string name="map_download_failure">Map download failed.</string>
+    <string name="city_not_found">Location not found.</string>
+
+    <string name="action_logout">logout</string>
+    <string name="access_token">pk.eyJ1Ijoic2hhaGVlci1zcHMiLCJhIjoiY2pkMDU0cDU2MXBvbjJ3czY1czd2czAyZiJ9.2pK0uw6yQr2BXGWlXnAl7w</string>
+    <string name="offline_mode">Offline mode</string>
+    <string name="logout">Logout</string>
+
+    <string name="enable">enable</string>
+    <string name="disable">Disable</string>
 
     <!-- Login Activity -->
     <string name="employee_id">Employee ID</string>
-    <string name="pin">PIN</string>
+    <string name="pin">Pin</string>
     <string name="login">Log in</string>
     <string name="or">OR</string>
-    <string name="scanning_employe_card">Scanning Employee Card</string> 
-    <string name="scan_my_employee_badge">Scan my employee badge</string>
+    <string name="scanning_employe_card">Scanning employee Card</string> 
+    <string name="scan_my_employee_badge">Scan employee badge</string>
     <string name="scan_a_barcode">Scan a barcode</string> 
-    <string name="getting_data">Retrieving data…</string>
-    <string name="submitting">Submitting</string>
+    <string name="submitting">Submitting assignment. Please wait.</string>
 
      <string name="enter_employee_id">Enter your 10 digit employee ID</string> 
     <string name="enter_valid_employee_id">Enter a valid employee ID</string>
@@ -38,6 +155,14 @@
     <string name="distribution">Distribution</string>
     <string name="Other">Other</string>
 
+    <string name="survey_will_be_conducted_on_your_location">Survey will be conducted on your current location.</string>
+
+
+    <string name="radio_dev">Test</string>
+    <string name="radio_prod">Production</string>
+
+    <string name="dialog_tree_subroute_title">Please add trees on the route.</string>
+    <string name="dialog_tree_subroute_number_placeholder">No. of trees</string>
 
     <string-array name="hours_arrays">
         <item>Bucket</item>

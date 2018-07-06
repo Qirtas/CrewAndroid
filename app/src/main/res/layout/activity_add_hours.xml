@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/activity_addhours"
+    android:background="@color/white"
+    tools:context="asplundh.sps.com.crewapp.Activity.AddHoursActivity">
+
+    //Topbar layout
+
+    <RelativeLayout
+        android:id="@+id/top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorPrimary"
+        >
+
+        <LinearLayout
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="30dp"
+                android:layout_height="match_parent">
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/back_ic"
+                    />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/work_assignment"
+                android:textColor="@color/white"
+                android:layout_gravity="center_vertical"
+                android:layout_toRightOf="@+id/iv_back"
+                android:textSize="22sp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="3dp"
+                />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/btn_submit"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:visibility="visible"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Submit"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:padding="12dp"
+                android:layout_centerVertical="true"
+                />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+    //Add note layout
+
+    <RelativeLayout
+        android:id="@+id/lay_addnote"
+        android:layout_width="match_parent"
+        android:layout_height="63dp"
+        android:background="@color/colorVeryLightGray"
+        android:layout_below="@+id/top_bar"
+        >
+
+        <EditText
+            android:id="@+id/et_note"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/editext_bg"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginRight="20dp"
+            android:paddingEnd="12dp"
+            android:layout_marginLeft="20dp"
+            android:textColor="@color/black"
+            android:cursorVisible="false"
+            android:drawableRight="@drawable/note_ic"
+            android:paddingRight="12dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:paddingStart="12dp"
+            android:textSize="13sp"
+            android:hint="Add note..."
+            />
+
+    </RelativeLayout>
+
+    //Select Date layout
+
+    <RelativeLayout
+        android:id="@+id/lay_select_Date"
+        android:layout_width="match_parent"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="18dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/lay_addnote"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select_Date"
+            android:layout_centerVertical="true"
+            android:textSize="13sp"
+            android:textColor="@color/blckk"
+            android:layout_marginLeft="12dp"
+            />
+
+        <RelativeLayout
+            android:id="@+id/btn_select_date"
+            android:layout_width="120dp"
+            android:layout_height="30dp"
+            android:background="@drawable/editext_bg"
+            android:layout_marginRight="7dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            >
+            <TextView
+                android:id="@+id/tv_selected_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/blckk"
+                android:textSize="12sp"
+                android:text="06/12/2018"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="4dp"
+                />
+
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:background="@drawable/date"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="4dp"
+                />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    //Total hours layout
+
+    <RelativeLayout
+        android:id="@+id/lay_add_hours"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/white"
+        android:layout_below="@+id/lay_select_Date"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/round_bg"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="18dp"
+            android:weightSum="2"
+            >
+            //Total prod hours
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="0dp"
+                android:orientation="vertical"
+                android:layout_marginLeft="12dp"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimary"
+                    android:text="Total productive hours"
+                    android:textStyle="bold"
+                    android:textSize="12sp"
+                    android:layout_marginTop="0dp"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_prodhrz_total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="0dp"
+                    android:text="0"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="match_parent"
+                android:background="#CCCCCC"/>
+
+            //Total non-prod hours
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="0dp"
+                android:orientation="vertical"
+                android:layout_marginRight="12dp"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimary"
+                    android:text="Total non productive hours"
+                    android:textStyle="bold"
+                    android:textSize="12sp"
+                    android:layout_marginTop="0dp"
+                    />
+                <TextView
+                    android:id="@+id/tv_nonprodhrz_total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:text="0"
+                    android:textSize="14sp"
+                    android:layout_marginTop="0dp"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    //enter crew hours
+    <TextView
+        android:id="@+id/tv_enter_crew_hours"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimary"
+        android:textSize="14sp"
+        android:text="Enter Crew Hours"
+        android:layout_marginTop="12dp"
+        android:layout_below="@+id/lay_add_hours"
+        android:layout_marginLeft="34dp"
+        />
+
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="3dp"
+        android:layout_below="@+id/tv_enter_crew_hours"
+        >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/layoutInsideScroll"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+</RelativeLayout>

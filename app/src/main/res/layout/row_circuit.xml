@@ -1,80 +1,214 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_marginBottom="20dp"
-              android:layout_height="70dp">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
     <RelativeLayout
         android:id="@+id/lay"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/light_blueee"
-        android:layout_marginLeft="13dp"
-        android:layout_marginRight="13dp"
-        android:orientation="vertical"
-        >
-        <TextView
-            android:id="@+id/name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Spruce ID"
-            android:textStyle="bold"
-            android:layout_marginTop="4dp"
-            android:textSize="20sp"
-            android:layout_marginLeft="17dp"
-            android:textColor="@color/blue_dark"
-            />
-        <TextView
-            android:id="@+id/area"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Circuit 1"
-            android:layout_below="@+id/name"
-            android:textSize="17sp"
-            android:textStyle="bold"
-            android:layout_marginLeft="17dp"
-            android:textColor="@color/blue_counter"
-            />
+        android:background="@drawable/shadow_img"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="0dp">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/light_grey"/>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/lay_row"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
+            android:orientation="vertical"
+            android:layout_marginLeft="12dp"
+
             >
 
-            <RelativeLayout
-                android:layout_width="110dp"
-                android:layout_height="34dp"
-                android:background="@color/blue_shade"
-                android:layout_marginRight="5dp"
-                android:layout_marginBottom="3dp"
+            <TextView
+                android:id="@+id/tv_circuit_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="19sp"
+                android:text="Circuit namedsdklfhsdklfn dsfksdjfksdjfksdjfikhsekofhsdkofhekfhksdjhfsdjkhkgfsdjkgfjsdgfsj"
+                android:textColor="@color/black"
+                android:focusable="true"
+                android:layout_marginRight="110dp"
+                android:textStyle="bold"
+                android:layout_marginTop="8dp"
+                />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp"
                 >
                 <TextView
-                    android:id="@+id/type"
+                    android:id="@+id/tv_start_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
-                    android:text="Transmission"
-                    android:textColor="@color/white"
-                    android:layout_centerInParent="true"
+                    android:text="Starts: 12/04/12018"
+                    android:textColor="@color/green"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_end_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:layout_marginLeft="18dp"
+                    android:textStyle="bold"
+                    android:text="Ends: 12/04/12018"
+                    android:textColor="@color/redd"
+                    />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_total_hrz"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:layout_marginTop="5dp"
+                android:textStyle="bold"
+                android:text="Total Hours: 30"
+                android:textColor="@color/grey"
+                />
+
+            <TextView
+                android:id="@+id/tv_non_prod_hrz"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:layout_marginTop="0dp"
+                android:textStyle="bold"
+                android:text="Non-productive hours: 12"
+                android:textColor="@color/grey"
+                />
+
+            <TextView
+                android:id="@+id/tv_milage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey"
+                android:textStyle="bold"
+                android:text="Mileage:"
+                android:textSize="16sp"
+                android:layout_marginBottom="18dp"
+                />
+
+            <RelativeLayout
+                android:id="@+id/iv_more"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:visibility="gone"
+                >
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/ic_more"
                     />
             </RelativeLayout>
 
+            //Desc layout
 
-            <ImageView
-                android:id="@+id/isAssigned"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_marginRight="5dp"
-                android:layout_gravity="center_vertical"
-                android:background="@drawable/person_ic"
-                />
+            <LinearLayout
+                android:id="@+id/lay_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:visibility="gone"
+                >
+                <ImageView
+                    android:id="@+id/iv_close"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_close"
+                    />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/grey"
+                        android:textStyle="bold"
+                        android:text="Milage:"
+                        android:textSize="14sp"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_milagee"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/grey"
+                        android:textStyle="bold"
+                        android:text="Mileage:"
+                        android:textSize="14sp"
+                        />
+
+                </LinearLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
 
+        <RelativeLayout
+            android:id="@+id/lay_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            >
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_margin="8dp"
+                android:background="@drawable/next_blue_arrow"
+                />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:layout_marginTop="12dp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="12dp"
+            android:textSize="12sp"
+            android:background="@drawable/bg_status_circuit"
+            android:text="Pending"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/light_grey"
+            android:layout_below="@+id/lay_row"
+            android:visibility="gone"
+            />
+
     </RelativeLayout>
 
-</LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_below="@+id/lay"
+        android:visibility="visible"
+        />
+
+</RelativeLayout>

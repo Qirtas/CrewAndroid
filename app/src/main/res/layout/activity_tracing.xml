@@ -1,0 +1,584 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+    tools:context="asplundh.sps.com.crewapp.Activity.TracingActivity">
+
+    <com.mapbox.mapboxsdk.maps.MapView
+        android:id="@+id/mapview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        mapbox:mapbox_styleUrl="mapbox://styles/mapbox/streets-v10"
+        mapbox:mapbox_cameraZoom="11"
+        />
+
+    <FrameLayout
+        android:id="@+id/fram_map"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:paddingTop="0dp"
+        >
+
+        <RelativeLayout
+            android:id="@+id/top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/colorPrimary"
+            android:layout_marginTop="0dp"
+            >
+
+            <LinearLayout
+                android:id="@+id/iv_back"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <RelativeLayout
+                    android:layout_width="30dp"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/back_ic"
+                        />
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/work_assignment"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center_vertical"
+                    android:layout_toRightOf="@+id/iv_back"
+                    android:textSize="22sp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="3dp"
+                    />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/btn_finish"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:visibility="visible"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Finish"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:padding="12dp"
+                    android:layout_centerVertical="true"
+                    />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        //Tracing modes labels
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="55dp"
+            android:layout_marginLeft="8dp"
+            >
+
+
+        //Tracing labels
+
+        <LinearLayout
+            android:id="@+id/lay_tracing_labels"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible"
+            >
+            <LinearLayout
+                android:id="@+id/btn_trace_finger"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:orientation="horizontal"
+                >
+                <ImageView
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:background="@drawable/finger_black"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="4dp"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="12sp"
+                    android:background="@drawable/bg_black_round"
+                    android:textStyle="bold"
+                    android:text="Trace with finger"
+                    android:padding="4dp"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btn_trace_polygon"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:orientation="horizontal"
+                >
+                <ImageView
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:background="@drawable/polygon_black"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="4dp"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="12sp"
+                    android:background="@drawable/bg_black_round"
+                    android:textStyle="bold"
+                    android:text="Trace by drawing polygon"
+                    android:padding="4dp"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btn_trace_all"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:orientation="horizontal"
+                >
+                <ImageView
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:background="@drawable/traceall_black"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="4dp"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="12sp"
+                    android:background="@drawable/bg_black_round"
+                    android:textStyle="bold"
+                    android:text="Trace all paths"
+                    android:padding="4dp"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+
+            //Trace by polygon mode
+
+            <LinearLayout
+                android:id="@+id/tracepolgon_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                >
+                <ImageView
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:background="@drawable/polygon_bluebg"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="4dp"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="12sp"
+                    android:background="@drawable/bg_black_round"
+                    android:textStyle="bold"
+                    android:text="Trace by drawing polygon"
+                    android:padding="4dp"
+                    />
+            </LinearLayout>
+
+            //Trace by finger mode
+
+            <LinearLayout
+                android:id="@+id/tracefinger_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                >
+                <ImageView
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:background="@drawable/finger_bluebg"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="4dp"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="12sp"
+                    android:background="@drawable/bg_black_round"
+                    android:textStyle="bold"
+                    android:text="Trace with finger"
+                    android:padding="4dp"
+                    />
+            </LinearLayout>
+
+            //Trace All mode
+
+            <LinearLayout
+                android:id="@+id/traceall_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                >
+                <ImageView
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:background="@drawable/traceall_bluebg"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="4dp"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="12sp"
+                    android:background="@drawable/bg_black_round"
+                    android:textStyle="bold"
+                    android:text="Trace all paths"
+                    android:padding="4dp"
+                    />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        //Bottom layouts
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            >
+            //start button
+
+            <RelativeLayout
+                android:id="@+id/btn_drawpolygon"
+                android:layout_width="130dp"
+                android:layout_height="60dp"
+                android:background="@drawable/button_bgshadow"
+                android:layout_marginRight="12dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="12dp"
+                android:visibility="gone"
+                >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="22dp"
+                    android:layout_centerInParent="true"
+                    >
+                    <ImageView
+                        android:id="@+id/iv_icc"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/trace_polygon_green"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_vertical"
+                        android:textSize="13sp"
+                        android:layout_toRightOf="@+id/iv_icc"
+                        android:text="Start"
+                        />
+                </LinearLayout>
+            </RelativeLayout>
+
+
+            //Undo done button
+
+            <LinearLayout
+                android:id="@+id/lay_undo_done"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginRight="12dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="12dp"
+                android:visibility="gone"
+                >
+
+                //undo
+                <RelativeLayout
+                    android:id="@+id/btn_undo"
+                    android:layout_width="130dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/button_bgshadow"
+                    android:layout_marginRight="12dp"
+
+                    >
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="22dp"
+                        android:layout_centerInParent="true"
+                        >
+                        <ImageView
+                            android:id="@+id/undo_ic"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/undo_ic"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="center_vertical"
+                            android:textSize="13sp"
+                            android:layout_toRightOf="@+id/undo_ic"
+                            android:text="Undo"
+                            />
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+
+                //done polygon
+                <RelativeLayout
+                    android:id="@+id/btn_done_polygon"
+                    android:layout_width="130dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/button_bgshadow"
+
+                    >
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="22dp"
+                        android:layout_centerInParent="true"
+                        >
+                        <ImageView
+                            android:id="@+id/done_ic"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/done_ic"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="center_vertical"
+                            android:textSize="13sp"
+                            android:layout_toRightOf="@+id/done_ic"
+                            android:text="Done"
+                            />
+                    </LinearLayout>
+
+                </RelativeLayout>
+            </LinearLayout>
+
+            //Lay lock map and done for trace by finger
+
+            <LinearLayout
+                android:id="@+id/lay_lock_done"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="12dp"
+                android:layout_marginBottom="12dp"
+                android:visibility="gone"
+                >
+
+                //lock map button
+
+                <RelativeLayout
+                    android:id="@+id/btn_lock_map"
+                    android:layout_width="130dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/button_bgshadow"
+                    android:visibility="visible"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="22dp"
+                        android:layout_centerInParent="true"
+                        >
+                        <ImageView
+                            android:id="@+id/lock_ic"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/locked"
+                            />
+                        <TextView
+                            android:id="@+id/tv_lock_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="center_vertical"
+                            android:textSize="13sp"
+                            android:layout_toRightOf="@+id/lock_ic"
+                            android:text="Lock map"
+                            />
+                    </LinearLayout>
+                </RelativeLayout>
+
+
+                //done by tracing button
+
+                <RelativeLayout
+                    android:id="@+id/btn_done_finger"
+                    android:layout_width="130dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/button_bgshadow"
+                    android:layout_marginLeft="12dp"
+                    android:visibility="gone"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="22dp"
+                        android:layout_centerInParent="true"
+                        >
+                        <ImageView
+                            android:id="@+id/done_icc"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/done_ic"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="center_vertical"
+                            android:textSize="13sp"
+                            android:layout_toRightOf="@+id/done_icc"
+                            android:text="Done"
+                            />
+                    </LinearLayout>
+                </RelativeLayout>
+
+                //undo by tracing
+                <RelativeLayout
+                    android:id="@+id/btn_undo_trace"
+                    android:layout_width="130dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/button_bgshadow"
+                    android:layout_marginRight="12dp"
+                    android:visibility="gone"
+
+                    >
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="22dp"
+                        android:layout_centerInParent="true"
+                        >
+                        <ImageView
+                            android:id="@+id/undo_icc"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/undo_ic"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="center_vertical"
+                            android:textSize="13sp"
+                            android:layout_toRightOf="@+id/undo_icc"
+                            android:text="Undo"
+                            />
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            //lay undo for trace all
+
+            <RelativeLayout
+                android:id="@+id/btn_undo_trace_all"
+                android:layout_width="130dp"
+                android:layout_height="60dp"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/button_bgshadow"
+                android:layout_marginRight="12dp"
+                android:visibility="gone"
+
+                >
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="22dp"
+                    android:layout_centerInParent="true"
+                    >
+                    <ImageView
+                        android:id="@+id/undo_iccc"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/undo_ic"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_vertical"
+                        android:textSize="13sp"
+                        android:layout_toRightOf="@+id/undo_iccc"
+                        android:text="Undo"
+                        />
+                </LinearLayout>
+
+            </RelativeLayout>
+
+
+
+        </RelativeLayout>
+
+
+        </FrameLayout>
+
+</FrameLayout>

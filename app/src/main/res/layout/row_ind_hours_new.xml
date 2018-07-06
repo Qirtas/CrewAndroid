@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:weightSum="10"
+        >
+
+        <TextView
+            android:id="@+id/tv_crew_type"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@color/blueee"
+            android:layout_weight="4"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:text="CREW TYPE"
+            android:gravity="center"
+            />
+
+        <TextView
+            android:id="@+id/tv_hrz"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@color/blueee"
+            android:layout_weight="3"
+            android:textColor="@color/white"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:textSize="14sp"
+            android:text="Hours"
+            android:gravity="center"
+            />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            >
+
+        <TextView
+            android:id="@+id/tv_nphrz"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/blueee"
+            android:textColor="@color/white"
+            android:padding="1dp"
+            android:textSize="14sp"
+            android:text="NP HOURS"
+            android:gravity="center"
+            />
+
+        <RelativeLayout
+            android:id="@+id/btn_remove_row"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            >
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:background="@drawable/minus"
+                android:layout_marginLeft="5dp"
+                android:layout_centerVertical="true"
+                android:layout_centerInParent="true"
+                />
+        </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

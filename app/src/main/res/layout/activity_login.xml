@@ -1,45 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
-    android:id="@+id/activity_login"
-    tools:context="asplundh.sps.com.asplundhproductivity.Activity.LoginActivity">
-
-    //Top Logo
-    <ImageView
-        android:id="@+id/logo"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:background="@drawable/icon"
-        android:layout_gravity="center_horizontal"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        />
-
-    <ImageView
-        android:id="@+id/utility"
-        android:layout_width="120dp"
-        android:layout_height="60dp"
-        android:background="@drawable/utilitiesservice"
-        android:layout_gravity="center_horizontal"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
-        android:layout_below="@+id/logo"
-        />
+    android:background="@drawable/bg_background"
+    android:orientation="vertical"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:orientation="vertical"
+        android:gravity="center_horizontal|bottom">
 
 
-    //Login fields
+        //Top Logo
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:elevation="10dp"
+            android:background="@drawable/icon"
+            android:layout_centerHorizontal="true"
+            />
+
+        <ImageView
+            android:id="@+id/utility"
+            android:layout_width="120dp"
+            android:layout_height="60dp"
+            android:background="@drawable/utilitiesservice"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:visibility="gone"
+            android:layout_below="@+id/logo"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_below="@+id/logo"
+            android:text="Utilities"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="26sp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_below="@+id/logo"
+            android:text="Services"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="26sp"
+            />
+    </LinearLayout>
+
+        //Login fields
 
     <LinearLayout
         android:id="@+id/login_fields"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="4.4"
+        android:gravity="center"
         android:orientation="vertical"
-        android:layout_below="@+id/utility"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
         android:layout_marginTop="25dp"
@@ -49,22 +78,9 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/grey"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/bg_white_round_corners"
             android:orientation="horizontal">
-
-            <RelativeLayout
-                android:id="@+id/iv_username"
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:background="@color/login_fields_ic"
-                >
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="28dp"
-                    android:layout_centerInParent="true"
-                    android:background="@drawable/profile" />
-            </RelativeLayout>
 
             <EditText
                 android:id="@+id/et_username"
@@ -73,26 +89,25 @@
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical"
                 android:background="@null"
-                android:hint="@string/employee_id"
-                android:imeOptions="actionNext"
-                android:paddingLeft="12dp"
-                android:text="mark"
+                android:paddingLeft="10dp"
+                android:drawableLeft="@drawable/ic_user"
+                android:text="mike"
                 android:maxLength="10"
                 android:textStyle="bold"
                 android:singleLine="true"
-                android:textColor="@color/blue_dark"
-                android:textColorHint="@color/blue_dark"
                 android:textSize="19dp"
-                android:layout_toEndOf="@+id/iv_username" />
+                android:textColor="@color/colorAccent"
+                android:hint="@string/employee_id"
+                android:textColorHint="@color/colorAccent" />
 
             <ImageView
                 android:id="@+id/cancel_id"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:src="@drawable/clear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_cancel_blue"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="4dp"
+                android:layout_marginRight="10dp"
                 />
 
         </RelativeLayout>
@@ -101,22 +116,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="20dp"
-            android:background="@color/grey"
+            android:background="@drawable/bg_white_round_corners"
             android:orientation="horizontal">
-
-            <RelativeLayout
-                android:id="@+id/iv_pin"
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:background="@color/login_fields_ic"
-                >
-                <ImageView
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
-                    android:layout_centerInParent="true"
-                    android:background="@drawable/locked" />
-            </RelativeLayout>
 
             <EditText
                 android:id="@+id/et_pin"
@@ -125,61 +126,89 @@
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical"
                 android:background="@null"
-                android:hint="@string/pin"
-                android:imeOptions="actionNext"
-                android:inputType="textPassword"
-                android:paddingLeft="12dp"
+                android:drawableLeft="@drawable/ic_password"
+                android:inputType="numberPassword"
+                android:paddingLeft="10dp"
                 android:maxLength="4"
-                android:text="mark"
+                android:text="1234"
                 android:textStyle="bold"
                 android:singleLine="true"
-                android:textColor="@color/blue_dark"
-                android:textColorHint="@color/blue_dark"
+                android:textColor="@color/colorAccent"
+                android:textColorHint="@color/colorAccent"
                 android:textSize="19dp"
-                android:layout_toEndOf="@+id/iv_pin" />
+                android:hint="@string/pin" />
 
             <ImageView
                 android:id="@+id/toggle_password_visibility"
-                android:layout_width="38dp"
-                android:layout_height="40dp"
-                android:padding="3dp"
-                android:src="@drawable/toggle_visibility"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_eye"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="4dp"
+                android:layout_marginRight="10dp"
                 />
+
+        </RelativeLayout>
+
+        //Radio buttons
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            >
+
+            <RadioGroup
+                android:id="@+id/radioVersion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <RadioButton
+                    android:id="@+id/radioProd"
+                    android:textSize="20sp"
+                    android:layout_marginTop="8dp"
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:text="@string/radio_prod"
+                    />
+
+                <RadioButton
+                    android:id="@+id/radioDev"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/radio_dev"
+                    android:textSize="20sp"
+                    android:textColor="@color/white"
+                    android:checked="true"
+                    />
+
+            </RadioGroup>
 
         </RelativeLayout>
 
         //Login Button
-
-        <RelativeLayout
+        <Button
             android:id="@+id/btn_login"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="20dp"
-            android:background="@color/blue_btn"
-            >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textSize="23sp"
-                android:text="@string/login"
-                android:layout_centerInParent="true"
-                android:textColor="@color/white"
-                />
-        </RelativeLayout>
+            android:layout_height="wrap_content"
+            android:text="@string/login"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            style="?android:attr/borderlessButtonStyle"
+            android:background="@drawable/bg_mode_tablet_accent"/>
 
     </LinearLayout>
 
 
-    //OR LINE
+        //OR LINE
 
     <LinearLayout
         android:id="@+id/or_layout"
         android:layout_width="match_parent"
-        android:layout_height="17dp"
+        android:layout_height="0dp"
+        android:layout_weight="1.1"
         android:layout_marginTop="38dp"
         android:orientation="horizontal"
         android:layout_below="@+id/login_fields"
@@ -212,61 +241,37 @@
         </RelativeLayout>
 
 
-        <RelativeLayout
+        <View
             android:layout_width="0dp"
             android:layout_height="2dp"
             android:layout_gravity="center_vertical"
             android:layout_weight="1.3"
-            android:background="@color/white"></RelativeLayout>
+            android:background="@color/white"></View>
 
     </LinearLayout>
 
 
-    //SCAN EMPLOYEE BADGE
-
-    <RelativeLayout
-        android:id="@+id/scan_barcode"
+        //SCAN EMPLOYEE BADGE
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@color/grey"
-        android:layout_alignParentBottom="true"
-        >
-        <RelativeLayout
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:paddingStart="@dimen/activity_login_side_padding"
+        android:paddingEnd="@dimen/activity_login_side_padding"
+        android:background="@color/colorPrimary">
+        <asplundh.sps.com.crewapp.Utils.CenteredButton
+            android:id="@+id/scan_barcode"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/blue_btn"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
-            >
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_centerInParent="true"
-                >
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:background="@drawable/qrcode_ic"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginRight="8dp"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/scan_my_employee_badge"
-                    android:textColor="@color/white"
-                    android:layout_gravity="center_vertical"
-                    android:textStyle="bold"
-                    android:gravity="center_vertical"
-                    android:textSize="22sp"
-                    />
-            </LinearLayout>
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_scan_bar"
+            android:textColor="@color/colorAccent"
+            android:text="@string/scan_my_employee_badge"
+            android:background="@drawable/bg_white_round_corners"/>
+    </LinearLayout>
 
 
-        </RelativeLayout>
-    </RelativeLayout>
+</LinearLayout>
 
-</RelativeLayout>

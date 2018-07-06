@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#6979BA</color>
+    <!--<color name="colorPrimary">#455B94</color>-->
+    <color name="colorPrimary">#18377c</color>
+    <!--<color name="colorPrimaryDark">#18377c</color>-->
+    <color name="colorPrimaryDark">#455B94</color>
+    <color name="colorAccent">#18377c</color>
+    <color name="colorGreen">#10B53B</color>
+    <color name="colorRed">#B21212</color>
+    <color name="colorYellow">#D4A000</color>
+    <color name="colorOrange">#f96908</color>
+    <color name="colorBlue">#0474A5</color>
+    <color name="colorMatBlue">#455B94</color>
+    <color name="colorMatBlue50">#88455b94</color>
+    <color name="colorVeryLightGray">#F2F2F2</color>
+    <color name="colorLightGray">#E6E6E6</color>
+    <color name="colorBitLightGray">#a19f9f</color>
+    <color name="colorGray">#3C3C3C</color>
+    <color name="colorBlack50">#77000000</color>
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
-    <color name="grey">#d3d4d9</color>
+    <color name="grey">#867f7f</color>
     <color name="light_grey">#dfdfdf</color>
     <color name="dark_grey">#a19f9f</color>
     <color name="text_red">#ec5e64</color>
@@ -22,7 +36,9 @@
     <color name="toastcolor_normal">#00a187</color>
 
     <color name="textcolor_grey">#91e5d4</color>
-
+    <color name="green">#06b75d</color>
+    <color name="grey_crew_name">#9da2c7</color>
+    <color name="orange">#fb7c00</color>
     <color name="cross_btn_color">#e60027</color>
     <color name="more_color">#0b9579</color>
     <color name="dark_grey_login">#393939</color>
@@ -34,10 +50,12 @@
     <color name="blckk">#393939</color>
     <color name="blueee">#6979BA</color>
     <color name="chkinbox_bg">#ebeef5</color>
-    <color name="redd">#ed6666</color>
+    <color name="redd">#e30a0a</color>
     <color name="diem_blue">#a5a5a5</color>
     <color name="error_white">#ffffff</color>
     <color name="redd1">#fc8b12</color>
+    <color name="warning_yellow">#ffcc4d</color>
+
 
     <color name="blue_top_bar">#6979ba</color>
     <color name="blue_light">#e3e1e1</color>
@@ -48,6 +66,14 @@
     <color name="light_blueee">#d3d4d9</color>#
     <color name="blue_shade">#7886c3</color>
     <color name="blue_light_text">#7887c2</color>
+    <color name="lightt_greyy">#ededed</color>
+    <color name="blue_version">#3d549d</color>
+    <color name="green_update">#11BC06</color>
 
+    <color name="green_trans">#0e000ea7</color>
+
+    <color name="endcolor">#9299c2</color>
+
+    <color name="blue_circyuti_type">#4b69b1</color>
 
 </resources>

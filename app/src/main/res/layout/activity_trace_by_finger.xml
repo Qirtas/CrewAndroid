@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+    tools:context="asplundh.sps.com.crewapp.Activity.TraceByFingerActivity">
+
+  <!--  <com.mapbox.mapboxsdk.maps.MapView
+        android:id="@+id/mapview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/top_bar"
+        mapbox:mapbox_styleUrl="mapbox://styles/mapbox/streets-v10"
+        mapbox:mapbox_cameraZoom="11"
+
+        />-->
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/top_bar"
+        />
+
+    <FrameLayout
+        android:id="@+id/fram_map"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:paddingTop="0dp"
+        >
+
+    <RelativeLayout
+        android:id="@+id/top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorPrimary"
+        >
+
+        <LinearLayout
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="30dp"
+                android:layout_height="match_parent">
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/back_ic"
+                    />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/work_assignment"
+                android:textColor="@color/white"
+                android:layout_gravity="center_vertical"
+                android:layout_toRightOf="@+id/iv_back"
+                android:textSize="22sp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="3dp"
+                />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/btn_finish"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:visibility="invisible"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Finish"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:padding="12dp"
+                android:layout_centerVertical="true"
+                />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+
+
+
+    <RelativeLayout
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        //lock button
+
+        <RelativeLayout
+            android:id="@+id/btn_lock_map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:padding="15dp"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentBottom="true"
+            android:visibility="visible"
+            >
+            <ImageView
+                android:id="@+id/iv_icc"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginRight="3dp"
+                android:layout_centerVertical="true"
+                android:background="@drawable/locked"
+                />
+            <TextView
+                android:id="@+id/tv_lock_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:layout_centerVertical="true"
+                android:textSize="15sp"
+                android:layout_toRightOf="@+id/iv_icc"
+                android:text="Lock map"
+                />
+
+        </RelativeLayout>
+
+
+       <!-- //Undo done button
+        <LinearLayout
+            android:id="@+id/lay_undo_done"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="10dp"
+            android:visibility="gone"
+            android:layout_alignParentBottom="true"
+            >
+
+            //undo
+            <RelativeLayout
+                android:id="@+id/btn_undo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:padding="15dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                >
+                <ImageView
+                    android:id="@+id/iv_ic"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/undo_ic"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:layout_centerVertical="true"
+                    android:textSize="15sp"
+                    android:layout_toRightOf="@+id/iv_ic"
+                    android:text="Undo"
+                    />
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/btn_done"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:padding="15dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                >
+                <ImageView
+                    android:id="@+id/iv_done"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/done_ic"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:layout_centerVertical="true"
+                    android:textSize="15sp"
+                    android:layout_toRightOf="@+id/iv_done"
+                    android:text="Done"
+                    />
+
+            </RelativeLayout>
+
+        </LinearLayout>-->
+
+
+        //add total note add hours
+
+        <RelativeLayout
+            android:id="@+id/lay_add_total_hrz"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/white"
+            android:visibility="gone"
+            android:layout_above="@+id/lay_bottom_addhrz_submit"
+            >
+
+            <ImageView
+                android:id="@+id/iv_close"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:background="@drawable/ic_close"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="10dp"
+                android:visibility="gone"
+                />
+
+            //add note
+            <LinearLayout
+                android:id="@+id/lay_add_note"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Add note"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="13sp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginLeft="17dp"
+                    />
+
+                <EditText
+                    android:id="@+id/et_note"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="13sp"
+                    android:singleLine="true"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:nextFocusDown="@+id/et_total_hrz"
+                    android:hint="Add note here"
+                    android:textColorHint="@color/black"
+                    />
+
+            </LinearLayout>
+
+            //add hours
+            <TextView
+                android:id="@+id/tv_add_hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add hours"
+                android:textColor="@color/colorPrimary"
+                android:textSize="13sp"
+                android:layout_marginTop="12dp"
+                android:layout_marginLeft="17dp"
+                android:layout_below="@+id/lay_add_note"
+                />
+
+            <LinearLayout
+                android:id="@+id/lay_total_hrz"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:layout_below="@+id/tv_add_hours"
+                >
+                <EditText
+                    android:id="@+id/et_total_hrz"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="13sp"
+                    android:maxLength="4"
+                    android:nextFocusDown="@+id/et_nonprod_hrz"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:inputType="number"
+                    android:hint="Total hours"
+                    android:textColorHint="@color/grey"
+                    />
+
+                <EditText
+                    android:id="@+id/et_nonprod_hrz"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="13sp"
+                    android:maxLength="4"
+                    android:inputType="number"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:hint="Non-productive hours"
+                    android:textColorHint="@color/grey"
+                    />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        //add individual hrz and note
+
+       <!-- <RelativeLayout
+            android:id="@+id/lay_ind_note_hrz"
+            android:layout_width="wrap_content"
+            android:layout_height="260dp"
+            android:background="@color/white"
+            android:visibility="gone"
+            android:layout_above="@+id/lay_bottom_addhrz_submit"
+            >
+
+            //add note
+            <LinearLayout
+                android:id="@+id/lay_add_note_ind_hrz"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Add note"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="13sp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginLeft="17dp"
+                    />
+
+                <EditText
+                    android:id="@+id/et_note_indhrz"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="13sp"
+                    android:singleLine="true"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:nextFocusDown="@+id/et_total_hrz"
+                    android:hint="Add note here"
+                    android:textColorHint="@color/black"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lay_fields_labels"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:background="@color/light_grey"
+                android:paddingTop="6dp"
+                android:paddingBottom="0dp"
+                android:weightSum="10"
+                android:layout_below="@+id/lay_add_note_ind_hrz"
+                >
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4.5"
+                    android:paddingStart="17dp"
+                    android:text="Add crew type"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="13sp"
+                    />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2.5"
+                    android:paddingStart="0dp"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="14dp"
+                    android:text="Hours"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="13sp"
+                    />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2.5"
+                    android:paddingStart="0dp"
+                    android:textStyle="bold"
+                    android:text="NP Hours"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="13sp"
+                    />
+
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_below="@+id/lay_fields_labels"
+                android:layout_height="120dp"
+                android:scrollbars="vertical" />
+
+        </RelativeLayout>-->
+
+
+        //add bottom hrz and submit button
+
+        <RelativeLayout
+            android:id="@+id/lay_bottom_addhrz_submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_alignParentBottom="true"
+            >
+
+            <LinearLayout
+                android:id="@+id/layy_add_hrz"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/light_grey"
+                android:orientation="horizontal"
+                android:weightSum="10"
+                >
+                <RelativeLayout
+                    android:id="@+id/btn_add_hrzz"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="4"
+                    android:layout_gravity="center_vertical"
+                    android:background="@color/white"
+                    android:visibility="invisible"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Add total hours"
+                        android:textSize="13sp"
+                        android:textColor="@color/grey"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="8dp"
+                        />
+                    <ImageView
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:background="@drawable/ind_clock"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="4dp"
+                        />
+                </RelativeLayout>
+
+                //save
+
+                <Button
+                    android:id="@+id/btn_savee"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="3"
+                    android:textColor="@color/black"
+                    android:layout_marginLeft="12dp"
+                    android:background="@color/white"
+                    android:textSize="13sp"
+                    android:text="Save"
+                    android:layout_marginRight="12dp"
+                    android:padding="8dp"
+                    android:layout_gravity="center_vertical"
+                    android:visibility="invisible"
+                    />
+
+                //submit
+                <Button
+                    android:id="@+id/btn_submit"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="3"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:background="@color/colorPrimary"
+                    android:layout_marginRight="12dp"
+                    android:textSize="13sp"
+                    android:text="Submit"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:layout_gravity="center_vertical"
+                    />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        //////////////////////////////////////////////////////////
+
+    </RelativeLayout>
+    </FrameLayout>
+
+</FrameLayout>

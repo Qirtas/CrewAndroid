@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:orientation="horizontal"
+        android:weightSum="10"
+        >
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            >
+        <View
+            android:layout_width="10dp"
+            android:layout_height="match_parent"
+            android:background="@color/warning_yellow"
+            />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:layout_marginTop="7dp"
+            android:layout_marginLeft="3dp"
+            >
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="25dp"
+                android:background="@drawable/warning"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="18dp"
+                />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/lay_heading"
+            android:layout_width="0dp"
+            android:layout_weight="8.5"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:layout_marginLeft="9dp"
+            >
+
+            <TextView
+                android:id="@+id/tv_warning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Warning"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:layout_marginLeft="0dp"
+                android:textSize="17sp"
+                />
+
+            <TextView
+                android:id="@+id/tv_warning_msg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_warning"
+                android:text="Already traced paths will get lost. Are you sure you want to trace all path?"
+                android:textColor="@color/black"
+                android:layout_marginTop="2dp"
+                android:layout_marginLeft="0dp"
+                android:textSize="15sp"
+                />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/tv_warning_msg"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="6dp"
+                >
+
+                <RelativeLayout
+                    android:id="@+id/btn_no"
+                    android:layout_width="60dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/bg_no_btn"
+                    android:layout_marginRight="8dp"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/black"
+                        android:text="No"
+                        android:layout_centerInParent="true"
+                        />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/btn_yes"
+                    android:layout_width="60dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/bg_yes_btn"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        android:text="Yes"
+                        android:layout_centerInParent="true"
+                        />
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
