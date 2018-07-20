@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/activity_addhours"
+    android:id="@+id/activity_addhoursnew"
     android:background="@color/white"
     tools:context="asplundh.sps.com.crewapp.Activity.AddHoursActivity">
 
@@ -75,7 +75,7 @@
     <RelativeLayout
         android:id="@+id/lay_addnote"
         android:layout_width="match_parent"
-        android:layout_height="63dp"
+        android:layout_height="53dp"
         android:background="@color/colorVeryLightGray"
         android:layout_below="@+id/top_bar"
         >
@@ -108,11 +108,12 @@
     <RelativeLayout
         android:id="@+id/lay_select_fp"
         android:layout_width="match_parent"
-        android:layout_height="76dp"
-        android:layout_marginTop="12dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="5dp"
         android:layout_marginLeft="18dp"
         android:layout_marginRight="18dp"
         android:layout_below="@+id/lay_addnote"
+        android:visibility="visible"
         android:background="@drawable/crew_bgshadow"
         >
 
@@ -142,8 +143,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:layout_marginTop="5dp"
+            android:layout_height="26dp"
+            android:layout_marginTop="3dp"
             android:background="@color/white"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
@@ -179,10 +180,10 @@
     <RelativeLayout
         android:id="@+id/lay_select_Date"
         android:layout_width="match_parent"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="4dp"
         android:layout_marginLeft="18dp"
         android:layout_marginRight="18dp"
-        android:layout_height="40dp"
+        android:layout_height="30dp"
         android:layout_below="@+id/lay_select_fp"
         >
         <TextView
@@ -232,8 +233,8 @@
     <RelativeLayout
         android:id="@+id/lay_add_hours"
         android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:layout_marginTop="12dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="5dp"
         android:background="@color/white"
         android:layout_below="@+id/lay_select_Date"
         >
@@ -329,36 +330,59 @@
         android:textColor="@color/colorPrimary"
         android:textSize="14sp"
         android:text="Enter Crew Hours"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="6dp"
         android:layout_below="@+id/lay_add_hours"
         android:layout_marginLeft="34dp"
         />
 
-    <ScrollView
-        android:id="@+id/scroll"
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="0dp"
-        android:layout_marginTop="3dp"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
         android:layout_below="@+id/tv_enter_crew_hours"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="12dp"
+        android:scrollbars="vertical" />
+
+
+    <LinearLayout
+        android:id="@+id/lay_add_new_row"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginBottom="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="8dp"
+        android:layout_alignParentRight="true"
         >
-
-        <LinearLayout
-            android:layout_width="fill_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:text="Tap to add new crew type"
+            android:textColor="@color/black"
+            android:layout_marginRight="8dp"
+            android:textSize="12sp"
+            />
 
-            <LinearLayout
-                android:id="@+id/layoutInsideScroll"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" >
-            </LinearLayout>
+        <ImageView
 
-        </LinearLayout>
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:background="@drawable/plus"
+            android:layout_marginRight="9dp"
+            />
 
 
-    </ScrollView>
+    </LinearLayout>
 
+  <!--  <LinearLayout
+        android:id="@+id/lay_add_new_row"
+        android:layout_width="80dp"
+        android:layout_height="20dp"
+        android:background="@color/bg_color"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="8dp"
+        android:layout_alignParentRight="true"
+        ></LinearLayout>
+-->
 
 </RelativeLayout>

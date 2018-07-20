@@ -129,7 +129,7 @@
                     android:paddingStart="4dp"
                     android:imeOptions="actionNext"
                     android:maxLength="4"
-                    android:inputType="number"
+                    android:inputType="numberDecimal"
                     android:background="@drawable/editext_bg"
                     />
 
@@ -171,7 +171,7 @@
                     android:layout_marginTop="4dp"
                     android:textSize="12sp"
                     android:paddingStart="4dp"
-                    android:inputType="number"
+                    android:inputType="numberDecimal"
                     android:maxLength="4"
                     android:imeOptions="actionDone"
                     android:singleLine="true"

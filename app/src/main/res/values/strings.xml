@@ -30,6 +30,9 @@
 
     <string name="work_plan">Work Plan</string>
     <string name="work_assignment">Work Assignment</string>
+    <string name="foreperson">Foreperson</string>
+    <string name="search">Search</string>
+    <string name="search_fp">Search foreperson</string>
 
 
     <string name="setting">Settings</string>

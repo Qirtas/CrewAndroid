@@ -32,14 +32,14 @@
         <activity
             android:name=".Activity.CircuitsListActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"></activity>
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".Activity.TracePolygonActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activity.WorkPlansActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"></activity>
+            android:windowSoftInputMode="stateHidden" />
 
         <!--
             <service
@@ -66,19 +66,23 @@
         <activity
             android:name=".Activity.AddHoursActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"></activity>
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".Activity.CircuitsGoogleMapsActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"></activity>
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".Activity.TraceByFingerActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity android:name=".Activity.SampleActivity"></activity>
+            android:screenOrientation="portrait" />
+        <activity android:name=".Activity.SampleActivity" />
         <activity
             android:name=".Activity.TracingActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity android:name=".Activity.Dummy"></activity>
+            android:screenOrientation="portrait" />
+        <activity android:name=".Activity.Dummy" />
+        <activity android:name=".Activity.FPListActivity" />
+        <activity android:name=".Activity.AddHoursNewActivity"
+            android:windowSoftInputMode="stateHidden"
+            ></activity>
     </application>
 
 </manifest>
